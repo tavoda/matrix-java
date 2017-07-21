@@ -27,3 +27,4 @@ build.sbt
 git_push.sh
 src/main/AndroidManifest.xml
 .gitignore
+README.md
