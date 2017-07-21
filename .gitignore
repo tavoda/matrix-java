@@ -20,5 +20,12 @@ target
 .gradle
 build
 gradle
+
+# IDEA files
 .idea
 *.iml
+
+# Generated files
+docs/
+src/main/java/
+src/test/java/org/matrix/client/api/
