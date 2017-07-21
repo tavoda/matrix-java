@@ -1,0 +1,28 @@
+{
+   "prev_content":{
+      "membership":"leave"
+   },
+   "origin_server_ts":1499866947468,
+   "sender":"@freenode_lqi:matrix.org",
+   "event_id":"$1499866947196880LPJzx:matrix.org",
+   "age":4424,
+   "unsigned":{
+      "prev_content":{
+         "membership":"leave"
+      },
+      "prev_sender":"@freenode_lqi:matrix.org",
+      "replaces_state":"$1499866847195033ONNbH:matrix.org",
+      "age":4424
+   },
+   "state_key":"@freenode_lqi:matrix.org",
+   "content":{
+      "membership":"join",
+      "avatar_url":null,
+      "displayname":"lqi (IRC)"
+   },
+   "membership":"join",
+   "room_id":"!cURbafjkfsMDVwdRDQ:matrix.org",
+   "user_id":"@freenode_lqi:matrix.org",
+   "replaces_state":"$1499866847195033ONNbH:matrix.org",
+   "type":"m.room.member"
+}

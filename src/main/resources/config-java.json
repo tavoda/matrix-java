@@ -1,0 +1,10 @@
+{
+	"invokerPackage": "org.matrix.client",
+	"apiPackage": "org.matrix.client.api",
+	"modelPackage": "org.matrix.client.model",
+	"groupId": "org.matrix",
+	"artifactId": "api",
+	"developerOrganization": "Matrix",
+	"library": "jersey2",
+	"dateLibrary": "java8"
+}

@@ -1,0 +1,694 @@
+{
+  "device_one_time_keys_count": {},
+  "account_data": {
+    "events": [
+      {
+        "content": {
+          "device": {},
+          "global": {
+            "content": [
+              {
+                "default": true,
+                "pattern": "tavoda",
+                "enabled": true,
+                "rule_id": ".m.rule.contains_user_name",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight"
+                  }
+                ]
+              }
+            ],
+            "override": [
+              {
+                "default": true,
+                "enabled": false,
+                "conditions": [],
+                "rule_id": ".m.rule.master",
+                "actions": [
+                  "dont_notify"
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.notice",
+                    "kind": "event_match",
+                    "key": "content.msgtype"
+                  }
+                ],
+                "rule_id": ".m.rule.suppress_notices",
+                "actions": [
+                  "dont_notify"
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.member",
+                    "kind": "event_match",
+                    "key": "type"
+                  },
+                  {
+                    "pattern": "invite",
+                    "kind": "event_match",
+                    "key": "content.membership"
+                  },
+                  {
+                    "pattern": "@tavoda:syn.f4s.eu",
+                    "kind": "event_match",
+                    "key": "state_key"
+                  }
+                ],
+                "rule_id": ".m.rule.invite_for_me",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.member",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.member_event",
+                "actions": [
+                  "dont_notify"
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "kind": "contains_display_name"
+                  }
+                ],
+                "rule_id": ".m.rule.contains_display_name",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight"
+                  }
+                ]
+              }
+            ],
+            "sender": [],
+            "room": [],
+            "underride": [
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.call.invite",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.call",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "ring"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "kind": "room_member_count",
+                    "is": "2"
+                  },
+                  {
+                    "pattern": "m.room.message",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.room_one_to_one",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "kind": "room_member_count",
+                    "is": "2"
+                  },
+                  {
+                    "pattern": "m.room.encrypted",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.encrypted_room_one_to_one",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.message",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.message",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.encrypted",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.encrypted",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "type": "m.push_rules"
+      }
+    ]
+  },
+  "to_device": {
+    "events": []
+  },
+  "presence": {
+    "events": [
+      {
+        "content": {
+          "currently_active": true,
+          "last_active_ago": 9,
+          "presence": "online"
+        },
+        "type": "m.presence",
+        "sender": "@tavoda:syn.f4s.eu"
+      }
+    ]
+  },
+  "next_batch": "s22_79_14_1_1_1_1_11",
+  "rooms": {
+    "leave": {},
+    "join": {
+      "!nHQsKKWoIPTzmdXzRE:syn.f4s.eu": {
+        "unread_notifications": {},
+        "timeline": {
+          "limited": true,
+          "prev_batch": "t2-9_79_14_1_1_1_1_11",
+          "events": [
+            {
+              "origin_server_ts": 1500570933504,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709338OACUt:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308594
+              },
+              "state_key": "@tavoda:syn.f4s.eu",
+              "content": {
+                "membership": "join",
+                "avatar_url": null,
+                "displayname": null
+              },
+              "membership": "join",
+              "type": "m.room.member"
+            },
+            {
+              "origin_server_ts": 1500570933591,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709339iaqCT:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308507
+              },
+              "state_key": "",
+              "content": {
+                "redact": 50,
+                "events_default": 0,
+                "users": {
+                  "@tavoda:syn.f4s.eu": 100
+                },
+                "invite": 0,
+                "ban": 50,
+                "state_default": 50,
+                "events": {
+                  "m.room.avatar": 50,
+                  "m.room.history_visibility": 100,
+                  "m.room.canonical_alias": 50,
+                  "m.room.name": 50,
+                  "m.room.power_levels": 100
+                },
+                "kick": 50,
+                "users_default": 0
+              },
+              "type": "m.room.power_levels"
+            },
+            {
+              "origin_server_ts": 1500570933688,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057093310mLnXE:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308410
+              },
+              "state_key": "",
+              "content": {
+                "alias": "#private:syn.f4s.eu"
+              },
+              "type": "m.room.canonical_alias"
+            },
+            {
+              "origin_server_ts": 1500570933778,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057093311wZjlC:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308320
+              },
+              "state_key": "",
+              "content": {
+                "join_rule": "invite"
+              },
+              "type": "m.room.join_rules"
+            },
+            {
+              "origin_server_ts": 1500570933870,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057093312yjAkZ:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308228
+              },
+              "state_key": "",
+              "content": {
+                "history_visibility": "shared"
+              },
+              "type": "m.room.history_visibility"
+            },
+            {
+              "origin_server_ts": 1500570933985,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057093313EvzML:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308113
+              },
+              "state_key": "",
+              "content": {
+                "guest_access": "can_join"
+              },
+              "type": "m.room.guest_access"
+            },
+            {
+              "origin_server_ts": 1500570934100,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057093414XLodp:syn.f4s.eu",
+              "unsigned": {
+                "age": 3307998
+              },
+              "state_key": "syn.f4s.eu",
+              "content": {
+                "aliases": [
+                  "#private:syn.f4s.eu"
+                ]
+              },
+              "type": "m.room.aliases"
+            },
+            {
+              "origin_server_ts": 1500570943938,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057094315qBwLW:syn.f4s.eu",
+              "unsigned": {
+                "age": 3298160
+              },
+              "content": {
+                "body": "Private messages",
+                "msgtype": "m.text"
+              },
+              "type": "m.room.message"
+            },
+            {
+              "origin_server_ts": 1500571001798,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057100117lbNYZ:syn.f4s.eu",
+              "unsigned": {
+                "prev_content": {
+                  "membership": "join",
+                  "avatar_url": null,
+                  "displayname": null
+                },
+                "prev_sender": "@tavoda:syn.f4s.eu",
+                "replaces_state": "$15005709338OACUt:syn.f4s.eu",
+                "age": 3240300
+              },
+              "state_key": "@tavoda:syn.f4s.eu",
+              "content": {
+                "membership": "join",
+                "avatar_url": null,
+                "displayname": "KUKU"
+              },
+              "membership": "join",
+              "type": "m.room.member"
+            },
+            {
+              "origin_server_ts": 1500571012541,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057101219UpuYP:syn.f4s.eu",
+              "unsigned": {
+                "prev_content": {
+                  "membership": "join",
+                  "avatar_url": null,
+                  "displayname": "KUKU"
+                },
+                "prev_sender": "@tavoda:syn.f4s.eu",
+                "replaces_state": "$150057100117lbNYZ:syn.f4s.eu",
+                "age": 3229557
+              },
+              "state_key": "@tavoda:syn.f4s.eu",
+              "content": {
+                "membership": "join",
+                "avatar_url": null,
+                "displayname": "BUBU"
+              },
+              "membership": "join",
+              "type": "m.room.member"
+            }
+          ]
+        },
+        "state": {
+          "events": [
+            {
+              "origin_server_ts": 1500570933461,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709337QgbCm:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308637
+              },
+              "state_key": "",
+              "content": {
+                "creator": "@tavoda:syn.f4s.eu"
+              },
+              "type": "m.room.create"
+            },
+            {
+              "origin_server_ts": 1500570933504,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709338OACUt:syn.f4s.eu",
+              "unsigned": {
+                "age": 3308594
+              },
+              "state_key": "@tavoda:syn.f4s.eu",
+              "content": {
+                "membership": "join",
+                "avatar_url": null,
+                "displayname": null
+              },
+              "membership": "join",
+              "type": "m.room.member"
+            }
+          ]
+        },
+        "ephemeral": {
+          "events": [
+            {
+              "content": {
+                "user_ids": []
+              },
+              "type": "m.typing"
+            }
+          ]
+        },
+        "account_data": {
+          "events": []
+        }
+      },
+      "!ZQiMvbDpDICWcBCjRC:syn.f4s.eu": {
+        "unread_notifications": {},
+        "timeline": {
+          "limited": false,
+          "prev_batch": "s22_79_14_1_1_1_1_11",
+          "events": [
+            {
+              "origin_server_ts": 1500570912752,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709120Ktemh:syn.f4s.eu",
+              "unsigned": {
+                "age": 3329346
+              },
+              "state_key": "",
+              "content": {
+                "creator": "@tavoda:syn.f4s.eu"
+              },
+              "type": "m.room.create"
+            },
+            {
+              "origin_server_ts": 1500570912796,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709121wrvLd:syn.f4s.eu",
+              "unsigned": {
+                "age": 3329302
+              },
+              "state_key": "@tavoda:syn.f4s.eu",
+              "content": {
+                "membership": "join",
+                "avatar_url": null,
+                "displayname": null
+              },
+              "membership": "join",
+              "type": "m.room.member"
+            },
+            {
+              "origin_server_ts": 1500570912876,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709122QfgMR:syn.f4s.eu",
+              "unsigned": {
+                "age": 3329222
+              },
+              "state_key": "",
+              "content": {
+                "redact": 50,
+                "events_default": 0,
+                "users": {
+                  "@tavoda:syn.f4s.eu": 100
+                },
+                "invite": 0,
+                "ban": 50,
+                "state_default": 50,
+                "events": {
+                  "m.room.avatar": 50,
+                  "m.room.history_visibility": 100,
+                  "m.room.canonical_alias": 50,
+                  "m.room.name": 50,
+                  "m.room.power_levels": 100
+                },
+                "kick": 50,
+                "users_default": 0
+              },
+              "type": "m.room.power_levels"
+            },
+            {
+              "origin_server_ts": 1500570912994,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709123PrYMx:syn.f4s.eu",
+              "unsigned": {
+                "age": 3329104
+              },
+              "state_key": "",
+              "content": {
+                "alias": "#public:syn.f4s.eu"
+              },
+              "type": "m.room.canonical_alias"
+            },
+            {
+              "origin_server_ts": 1500570913084,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709134PUxmh:syn.f4s.eu",
+              "unsigned": {
+                "age": 3329014
+              },
+              "state_key": "",
+              "content": {
+                "join_rule": "public"
+              },
+              "type": "m.room.join_rules"
+            },
+            {
+              "origin_server_ts": 1500570913174,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709135tgduO:syn.f4s.eu",
+              "unsigned": {
+                "age": 3328924
+              },
+              "state_key": "",
+              "content": {
+                "history_visibility": "shared"
+              },
+              "type": "m.room.history_visibility"
+            },
+            {
+              "origin_server_ts": 1500570913301,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$15005709136REWVK:syn.f4s.eu",
+              "unsigned": {
+                "age": 3328797
+              },
+              "state_key": "syn.f4s.eu",
+              "content": {
+                "aliases": [
+                  "#public:syn.f4s.eu"
+                ]
+              },
+              "type": "m.room.aliases"
+            },
+            {
+              "origin_server_ts": 1500570950240,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057095016yrGMV:syn.f4s.eu",
+              "unsigned": {
+                "age": 3291858
+              },
+              "content": {
+                "body": "public messages",
+                "msgtype": "m.text"
+              },
+              "type": "m.room.message"
+            },
+            {
+              "origin_server_ts": 1500571001840,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057100118xgPgL:syn.f4s.eu",
+              "unsigned": {
+                "prev_content": {
+                  "membership": "join",
+                  "avatar_url": null,
+                  "displayname": null
+                },
+                "prev_sender": "@tavoda:syn.f4s.eu",
+                "replaces_state": "$15005709121wrvLd:syn.f4s.eu",
+                "age": 3240258
+              },
+              "state_key": "@tavoda:syn.f4s.eu",
+              "content": {
+                "membership": "join",
+                "avatar_url": null,
+                "displayname": "KUKU"
+              },
+              "membership": "join",
+              "type": "m.room.member"
+            },
+            {
+              "origin_server_ts": 1500571012588,
+              "sender": "@tavoda:syn.f4s.eu",
+              "event_id": "$150057101220BPZXv:syn.f4s.eu",
+              "unsigned": {
+                "prev_content": {
+                  "membership": "join",
+                  "avatar_url": null,
+                  "displayname": "KUKU"
+                },
+                "prev_sender": "@tavoda:syn.f4s.eu",
+                "replaces_state": "$150057100118xgPgL:syn.f4s.eu",
+                "age": 3229510
+              },
+              "state_key": "@tavoda:syn.f4s.eu",
+              "content": {
+                "membership": "join",
+                "avatar_url": null,
+                "displayname": "BUBU"
+              },
+              "membership": "join",
+              "type": "m.room.member"
+            }
+          ]
+        },
+        "state": {
+          "events": []
+        },
+        "ephemeral": {
+          "events": [
+            {
+              "content": {
+                "user_ids": []
+              },
+              "type": "m.typing"
+            }
+          ]
+        },
+        "account_data": {
+          "events": []
+        }
+      }
+    },
+    "invite": {}
+  },
+  "device_lists": {
+    "changed": []
+  }
+}
