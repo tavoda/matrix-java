@@ -5,6 +5,7 @@
       "put" : {
         "summary" : "Set some account_data for the user.",
         "description" : "Set some account_data for the client. This config is only visible to the user\nthat set the account_data. The config will be synced to clients in the\ntop-level ``account_data``.",
+        "operationId" : "setAccountData",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -29,7 +30,10 @@
           "description" : "The content of the account_data",
           "schema" : {
             "type" : "object",
-            "example" : "{\"custom_account_data_key\": \"custom_config_value\"}"
+            "example" : "{\"custom_account_data_key\": \"custom_config_value\"}",
+            "additionalProperties" : {
+              "type" : "string"
+            }
           }
         } ],
         "responses" : {
@@ -44,6 +48,7 @@
       "put" : {
         "summary" : "Set some account_data for the user.",
         "description" : "Set some account_data for the client on a given room. This config is only\nvisible to the user that set the account_data. The config will be synced to\nclients in the per-room ``account_data``.",
+        "operationId" : "setAccountDataForRoom",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -75,7 +80,10 @@
           "description" : "The content of the account_data",
           "schema" : {
             "type" : "object",
-            "example" : "{\"custom_account_data_key\": \"custom_account_data_value\"}"
+            "example" : "{\"custom_account_data_key\": \"custom_account_data_value\"}",
+            "additionalProperties" : {
+              "type" : "string"
+            }
           }
         } ],
         "responses" : {
@@ -90,6 +98,7 @@
       "get" : {
         "summary" : "Gets a list of a user's third party identifiers.",
         "description" : "Gets a list of the third party identifiers that the homeserver has\nassociated with the user's account.\n\nThis is *not* the same as the list of third party identifiers bound to\nthe user's Matrix ID in Identity Servers.\n\nIdentifiers in this list may be used by the homeserver as, for example,\nidentifiers that it will accept to reset the user's account password.",
+        "operationId" : "getUserIdentifiers",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -101,7 +110,7 @@
             },
             "schema" : {
               "type" : "object",
-              "title" : "Account3pidResponse",
+              "title" : "UserIdentifiersResponse",
               "properties" : {
                 "threepids" : {
                   "type" : "array",
@@ -130,6 +139,7 @@
       "post" : {
         "summary" : "Adds contact information to the user's account.",
         "description" : "Adds contact information to the user's account.",
+        "operationId" : "addCredentials",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -138,6 +148,7 @@
           "name" : "body",
           "schema" : {
             "type" : "object",
+            "title" : "AddCredentialsRequest",
             "properties" : {
               "three_pid_creds" : {
                 "title" : "ThreePidCredentials",
@@ -173,10 +184,7 @@
           "200" : {
             "description" : "The addition was successful.",
             "examples" : {
-              "application/json" : "{}",
-              "schema" : {
-                "type" : "object"
-              }
+              "application/json" : "{}"
             }
           },
           "403" : {
@@ -193,6 +201,7 @@
       "post" : {
         "summary" : "Requests a validation token be sent to the given email address for the purpose of adding an email address to an account",
         "description" : "Proxies the identity server API ``validate/email/requestToken``, but\nfirst checks that the given email address is **not** already associated\nwith an account on this Home Server. This API should be used to request\nvalidation tokens when adding an email address to an account. This API's\nparameters and response is identical to that of the HS API\n|/register/email/requestToken|_ endpoint.",
+        "operationId" : "requestEmailValidationAfterAdd",
         "responses" : {
           "200" : {
             "description" : "An email was sent to the given address"
@@ -283,6 +292,7 @@
       "post" : {
         "summary" : "Ban a user in the room.",
         "description" : "Ban a user in the room. If the user is currently in the room, also kick them.\n\nWhen a user is banned from a room, they may not join it or be invited to it until they are unbanned.\n\nThe caller must have the required power level in order to perform this operation.",
+        "operationId" : "roomBanUser",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -319,9 +329,6 @@
             "description" : "The user has been kicked and banned from the room.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "403" : {
@@ -338,6 +345,7 @@
       "post" : {
         "summary" : "Unban a user from the room.",
         "description" : "Unban a user from the room. This allows them to be invited to the room,\nand join if they would otherwise be allowed to join according to its join rules.\n\nThe caller must have the required power level in order to perform this operation.",
+        "operationId" : "roomUnbanUser",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -370,9 +378,6 @@
             "description" : "The user has been unbanned from the room.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "403" : {
@@ -444,22 +449,23 @@
     "/media/r0/upload" : {
       "post" : {
         "summary" : "Upload some content to the content repository.",
+        "operationId" : "uploadMedia",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "header",
           "name" : "Content-Type",
           "type" : "string",
           "description" : "The content type of the file being uploaded",
-          "x-example" : "Content-Type: audio/mpeg"
+          "example" : "Content-Type: audio/mpeg"
         }, {
           "in" : "query",
           "type" : "string",
-          "x-example" : "War and Peace.pdf",
+          "example" : "War and Peace.pdf",
           "name" : "filename",
           "description" : "The name of the file being uploaded"
         }, {
           "in" : "body",
-          "name" : "<content>",
+          "name" : "content",
           "description" : "The content to be uploaded.",
           "required" : true,
           "schema" : {
@@ -493,6 +499,7 @@
     "/media/r0/download/{serverName}/{mediaId}" : {
       "get" : {
         "summary" : "Download content from the content repository.",
+        "operationId" : "downloadMedia",
         "produces" : [ "*/*" ],
         "parameters" : [ {
           "in" : "path",
@@ -533,6 +540,7 @@
     "/media/r0/download/{serverName}/{mediaId}/{fileName}" : {
       "get" : {
         "summary" : "Download content from the content repository as a given filename.",
+        "operationId" : "downloadMediaFile",
         "produces" : [ "*/*" ],
         "parameters" : [ {
           "in" : "path",
@@ -580,6 +588,7 @@
     "/media/r0/thumbnail/{serverName}/{mediaId}" : {
       "get" : {
         "summary" : "Download a thumbnail of the content from the content repository.",
+        "operationId" : "downloadMediaThumbnail",
         "produces" : [ "image/jpeg", "image/png" ],
         "parameters" : [ {
           "in" : "path",
@@ -1210,6 +1219,7 @@
       "post" : {
         "summary" : "Invite a user to participate in a particular room.",
         "description" : ".. _invite-by-user-id-endpoint:\n\n*Note that there are two forms of this API, which are documented separately.\nThis version of the API requires that the inviter knows the Matrix\nidentifier of the invitee. The other is documented in the*\n`third party invites section`_.\n\nThis API invites a user to participate in a particular room.\nThey do not start participating in the room until they actually join the\nroom.\n\nOnly users currently in a particular room can invite other users to\njoin that room.\n\nIf the user was invited to the room, the homeserver will append a\n``m.room.member`` event to the room.\n\n.. _third party invites section: `invite-by-third-party-id-endpoint`_",
+        "operationId" : "roomInviteUser",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1226,6 +1236,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "RoomInviteUserRequest",
             "example" : "{\n  \"user_id\": \"@cheeky_monkey:matrix.org\"\n}",
             "properties" : {
               "user_id" : {
@@ -1241,9 +1252,6 @@
             "description" : "The user has been invited to join the room.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "403" : {
@@ -1266,6 +1274,7 @@
       "post" : {
         "summary" : "Start the requesting user participating in a particular room.",
         "description" : "*Note that this API requires a room ID, not alias.* ``/join/{roomIdOrAlias}`` *exists if you have a room alias.*\n\nThis API starts a user participating in a particular room, if that user\nis allowed to participate in that room. After this call, the client is\nallowed to see all current state events in the room, and all subsequent\nevents associated with the room until the user leaves the room.\n\nAfter a user has joined a room, the room will appear as an entry in the\nresponse of the |/initialSync|_ and |/sync|_ APIs.\n\nIf a ``third_party_signed`` was supplied, the homeserver must verify\nthat it matches a pending ``m.room.third_party_invite`` event in the\nroom, and perform key validity checking if required by the event.",
+        "operationId" : "roomJoin",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1278,37 +1287,19 @@
           "x-example" : "!d41d8cd:matrix.org"
         }, {
           "in" : "body",
-          "name" : "third_party_signed",
+          "name" : "ThirdParty",
+          "type" : "object",
           "schema" : {
             "type" : "object",
-            "example" : "{\n  \"third_party_signed\": {\n    \"sender\": \"@cat:the.hat\",\n    \"mxid\": \"@green:eggs.ham\",\n    \"token\": \"random8nonce\",\n    \"signatures\": {\n      \"horton.hears\": {\n        \"ed25519:0\": \"some9signature\"\n      }\n    }\n  }\n}",
+            "title" : "RoomJoinRequest",
+            "name" : "RoomJoinRequest",
             "properties" : {
               "third_party_signed" : {
                 "type" : "object",
-                "title" : "ThirdPartySigned",
-                "description" : "A signature of an ``m.third_party_invite`` token to prove that this user owns a third party identity which has been invited to the room.",
-                "properties" : {
-                  "sender" : {
-                    "type" : "string",
-                    "description" : "The Matrix ID of the user who issued the invite."
-                  },
-                  "mxid" : {
-                    "type" : "string",
-                    "description" : "The Matrix ID of the invitee."
-                  },
-                  "token" : {
-                    "type" : "string",
-                    "description" : "The state key of the m.third_party_invite event."
-                  },
-                  "signatures" : {
-                    "type" : "object",
-                    "description" : "A signatures object containing a signature of the entire signed object.",
-                    "title" : "Signatures"
-                  }
-                },
-                "required" : [ "sender", "mxid", "token", "signatures" ]
+                "$ref" : "#/definitions/ThirdParty"
               }
-            }
+            },
+            "example" : "{\n  \"third_party_signed\": {\n    \"sender\": \"@cat:the.hat\",\n    \"mxid\": \"@green:eggs.ham\",\n    \"token\": \"random8nonce\",\n    \"signatures\": {\n      \"horton.hears\": {\n        \"ed25519:0\": \"some9signature\"\n      }\n    }\n  }\n}"
           }
         } ],
         "responses" : {
@@ -1318,7 +1309,7 @@
               "application/json" : "{\"room_id\": \"!d41d8cd:matrix.org\"}"
             },
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/RoomIdResponse"
             }
           },
           "403" : {
@@ -1341,6 +1332,7 @@
       "post" : {
         "summary" : "Start the requesting user participating in a particular room.",
         "description" : "*Note that this API takes either a room ID or alias, unlike* ``/room/{roomId}/join``.\n\nThis API starts a user participating in a particular room, if that user\nis allowed to participate in that room. After this call, the client is\nallowed to see all current state events in the room, and all subsequent\nevents associated with the room until the user leaves the room.\n\nAfter a user has joined a room, the room will appear as an entry in the\nresponse of the |/initialSync|_ and |/sync|_ APIs.\n\nIf a ``third_party_signed`` was supplied, the homeserver must verify\nthat it matches a pending ``m.room.third_party_invite`` event in the\nroom, and perform key validity checking if required by the event.",
+        "operationId" : "roomJoinByAlias",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1353,44 +1345,25 @@
           "x-example" : "#monkeys:matrix.org"
         }, {
           "in" : "body",
-          "name" : "third_party_signed",
+          "name" : "ThirdPartySigned",
           "schema" : {
             "type" : "object",
-            "example" : "{\n  \"third_party_signed\": {\n    \"signed\": {\n      \"sender\": \"@cat:the.hat\",\n      \"mxid\": \"@green:eggs.ham\",\n      \"token\": \"random8nonce\",\n      \"signatures\": {\n        \"horton.hears\": {\n          \"ed25519:0\": \"some9signature\"\n        }\n      }\n    }\n  }\n}",
+            "title" : "RoomJoinWithAliasRequest",
             "properties" : {
               "third_party_signed" : {
                 "type" : "object",
-                "title" : "ThirdPartySigned",
                 "description" : "A signature of an ``m.third_party_invite`` token to prove that this user owns a third party identity which has been invited to the room.",
+                "title" : "ThirdPartySignedSigned",
                 "properties" : {
                   "signed" : {
                     "type" : "object",
-                    "title" : "Signed",
-                    "properties" : {
-                      "sender" : {
-                        "type" : "string",
-                        "description" : "The Matrix ID of the user who issued the invite."
-                      },
-                      "mxid" : {
-                        "type" : "string",
-                        "description" : "The Matrix ID of the invitee."
-                      },
-                      "token" : {
-                        "type" : "string",
-                        "description" : "The state key of the m.third_party_invite event."
-                      },
-                      "signatures" : {
-                        "type" : "object",
-                        "description" : "A signatures object containing a signature of the entire signed object.",
-                        "title" : "Signatures"
-                      }
-                    },
-                    "required" : [ "sender", "mxid", "token", "signatures" ]
+                    "$ref" : "#/definitions/ThirdParty"
                   }
                 },
                 "required" : [ "signed" ]
               }
-            }
+            },
+            "example" : "{\n  \"third_party_signed\": {\n    \"signed\": {\n      \"sender\": \"@cat:the.hat\",\n      \"mxid\": \"@green:eggs.ham\",\n      \"token\": \"random8nonce\",\n      \"signatures\": {\n        \"horton.hears\": {\n          \"ed25519:0\": \"some9signature\"\n        }\n      }\n    }\n  }\n}"
           }
         } ],
         "responses" : {
@@ -1400,7 +1373,7 @@
               "application/json" : "{\"room_id\": \"!d41d8cd:matrix.org\"}"
             },
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/RoomIdResponse"
             }
           },
           "403" : {
@@ -1423,6 +1396,7 @@
       "post" : {
         "summary" : "Upload end-to-end encryption keys.",
         "description" : "Publishes end-to-end encryption keys for the device.",
+        "operationId" : "uploadKeys",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1432,6 +1406,7 @@
           "description" : "The keys to be published",
           "schema" : {
             "type" : "object",
+            "title" : "UploadKeysRequest",
             "properties" : {
               "device_keys" : {
                 "description" : "Identity keys for the device. May be absent if no new\nidentity keys are required.",
@@ -1471,6 +1446,7 @@
             "description" : "The provided keys were sucessfully uploaded.",
             "schema" : {
               "type" : "object",
+              "title" : "UploadKeysResponse",
               "properties" : {
                 "one_time_key_counts" : {
                   "type" : "object",
@@ -1495,6 +1471,7 @@
       "post" : {
         "summary" : "Download device identity keys.",
         "description" : "Returns the current devices and identity keys for the given users.",
+        "operationId" : "downloadKeys",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1504,6 +1481,7 @@
           "description" : "Query defining the keys to be downloaded",
           "schema" : {
             "type" : "object",
+            "title" : "DownloadKeysRequest",
             "properties" : {
               "timeout" : {
                 "type" : "integer",
@@ -1533,6 +1511,7 @@
             "description" : "The device information",
             "schema" : {
               "type" : "object",
+              "title" : "DownloadKeysResponse",
               "properties" : {
                 "failures" : {
                   "type" : "object",
@@ -1599,6 +1578,7 @@
       "post" : {
         "summary" : "Claim one-time encryption keys.",
         "description" : "Claims one-time keys for use in pre-key messages.",
+        "operationId" : "claimKeys",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1608,6 +1588,7 @@
           "description" : "Query defining the keys to be claimed",
           "schema" : {
             "type" : "object",
+            "title" : "ClaimKeysRequest",
             "properties" : {
               "timeout" : {
                 "type" : "integer",
@@ -1640,6 +1621,7 @@
             "description" : "The claimed keys",
             "schema" : {
               "type" : "object",
+              "title" : "ClaimKeysResponse",
               "properties" : {
                 "failures" : {
                   "type" : "object",
@@ -1684,6 +1666,7 @@
       "get" : {
         "summary" : "Query users with recent device key updates.",
         "description" : "Gets a list of users who have updated their device identity keys since a\nprevious sync token.\n\nThe server should include in the results any users who:\n\n* currently share a room with the calling user (ie, both users have\n  membership state ``join``); *and*\n* added new device identity keys or removed an existing device with\n  identity keys, between ``from`` and ``to``.",
+        "operationId" : "getChangedKeys",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1707,6 +1690,7 @@
             "description" : "The list of users who updated their devices.",
             "schema" : {
               "type" : "object",
+              "title" : "GetChangedKeysResponse",
               "properties" : {
                 "changes" : {
                   "type" : "array",
@@ -1727,6 +1711,7 @@
       "post" : {
         "summary" : "Kick a user from the room.",
         "description" : "Kick a user from the room.\n\nThe caller must have the required power level in order to perform this operation.",
+        "operationId" : "roomKickUser",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1743,6 +1728,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "KickUserRequest",
             "example" : "{\n  \"reason\": \"Telling unfunny jokes\",\n  \"user_id\": \"@cheeky_monkey:matrix.org\"\n}",
             "properties" : {
               "user_id" : {
@@ -1762,9 +1748,6 @@
             "description" : "The user has been kicked from the room.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "403" : {
@@ -1781,6 +1764,7 @@
       "post" : {
         "summary" : "Stop the requesting user participating in a particular room.",
         "description" : "This API stops a user participating in a particular room.\n\nIf the user was already in the room, they will no longer be able to see\nnew events in the room. If the room requires an invite to join, they\nwill need to be re-invited before they can re-join.\n\nIf the user was invited to the room, but had not joined, this call\nserves to reject the invite.\n\nThe user will still be allowed to retrieve history from the room which\nthey were previously allowed to see.",
+        "operationId" : "roomLeave",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1797,9 +1781,6 @@
             "description" : "The room has been left.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "429" : {
@@ -1816,6 +1797,7 @@
       "post" : {
         "summary" : "Stop the requesting user remembering about a particular room.",
         "description" : "This API stops a user remembering about a particular room.\n\nIn general, history is a first class citizen in Matrix. After this API\nis called, however, a user will no longer be able to retrieve history\nfor this room. If all users on a homeserver forget a room, the room is\neligible for deletion from that homeserver.\n\nIf the user is currently joined to the room, they will implicitly leave\nthe room as part of this API call.",
+        "operationId" : "roomForget",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -1832,9 +1814,6 @@
             "description" : "The room has been forgotten.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "429" : {
@@ -2150,6 +2129,7 @@
       "get" : {
         "summary" : "Gets a list of events that the user has been notified about",
         "description" : "This API is used to paginate through the list of events that the\nuser has been, or would have been notified about.",
+        "operationId" : "getNotifications",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -2162,7 +2142,7 @@
           "x-example" : "xxxxx"
         }, {
           "in" : "query",
-          "type" : "number",
+          "type" : "integer",
           "name" : "limit",
           "description" : "Limit on the number of events to return in this request.",
           "required" : false,
@@ -2183,6 +2163,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "NotificationsResponse",
               "required" : [ "notifications" ],
               "properties" : {
                 "next_token" : {
@@ -2477,6 +2458,7 @@
       "put" : {
         "summary" : "Update this user's presence state.",
         "description" : "This API sets the given user's presence state. When setting the status,\nthe activity time is updated to reflect that activity; the client does\nnot need to specify the ``last_active_ago`` field. You cannot set the\npresence state of another user.",
+        "operationId" : "setPresenceStatus",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -2494,6 +2476,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "PresenceStatusRequest",
             "example" : "{\n  \"presence\": \"online\",\n  \"status_msg\": \"I am here.\"\n}",
             "properties" : {
               "presence" : {
@@ -2514,9 +2497,6 @@
             "description" : "The new presence state was set.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "429" : {
@@ -2529,6 +2509,7 @@
         "tags" : [ "Presence" ]
       },
       "get" : {
+        "operationId" : "getPresenceStatus",
         "summary" : "Get this user's presence state.",
         "description" : "Get the given user's presence state.",
         "parameters" : [ {
@@ -2547,6 +2528,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "PresenceStatusResponse",
               "properties" : {
                 "presence" : {
                   "type" : "string",
@@ -2579,6 +2561,7 @@
     "/client/r0/presence/list/{userId}" : {
       "post" : {
         "summary" : "Add or remove users from this presence list.",
+        "operationId" : "setPresenceList",
         "description" : "Adds or removes users from this presence list.",
         "security" : [ {
           "accessToken" : [ ]
@@ -2597,6 +2580,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "PresenceListRequest",
             "example" : "{\n  \"invite\": [\n    \"@bob:matrix.org\"\n  ],\n  \"drop\": [\n    \"@alice:matrix.org\"\n  ]\n}",
             "properties" : {
               "invite" : {
@@ -2623,9 +2607,6 @@
             "description" : "The list was updated.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "429" : {
@@ -2640,6 +2621,7 @@
       "get" : {
         "summary" : "Get presence events for this presence list.",
         "description" : "Retrieve a list of presence events for every user on this list.",
+        "operationId" : "getPresenceList",
         "parameters" : [ {
           "in" : "path",
           "type" : "string",
@@ -2658,10 +2640,7 @@
               "type" : "array",
               "items" : {
                 "type" : "object",
-                "title" : "PresenceEvent",
-                "allOf" : [ {
-                  "$ref" : "#/definitions/Event"
-                } ]
+                "$ref" : "#/definitions/MPresence"
               }
             }
           }
@@ -2673,6 +2652,7 @@
       "put" : {
         "summary" : "Set the user's display name.",
         "description" : "This API sets the given user's display name. You must have permission to\nset this user's display name, e.g. you need to have their ``access_token``.",
+        "operationId" : "setDisplayName",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -2690,6 +2670,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "DisplayNameRequest",
             "example" : "{\n  \"displayname\": \"Alice Margatroid\"\n}",
             "properties" : {
               "displayname" : {
@@ -2704,9 +2685,6 @@
             "description" : "The display name was set.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "429" : {
@@ -2721,6 +2699,7 @@
       "get" : {
         "summary" : "Get the user's display name.",
         "description" : "Get the user's display name. This API may be used to fetch the user's\nown displayname or to query the name of other users; either locally or\non remote homeservers.",
+        "operationId" : "getDisplayName",
         "parameters" : [ {
           "in" : "path",
           "type" : "string",
@@ -2737,6 +2716,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "DisplayNameResponse",
               "properties" : {
                 "displayname" : {
                   "type" : "string",
@@ -2756,6 +2736,7 @@
       "put" : {
         "summary" : "Set the user's avatar URL.",
         "description" : "This API sets the given user's avatar URL. You must have permission to\nset this user's avatar URL, e.g. you need to have their ``access_token``.",
+        "operationId" : "setAvatar",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -2773,6 +2754,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "AvatarRequest",
             "example" : "{\n  \"avatar_url\": \"mxc://matrix.org/wefh34uihSDRGhw34\"\n}",
             "properties" : {
               "avatar_url" : {
@@ -2787,9 +2769,6 @@
             "description" : "The avatar URL was set.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "429" : {
@@ -2804,6 +2783,7 @@
       "get" : {
         "summary" : "Get the user's avatar URL.",
         "description" : "Get the user's avatar URL. This API may be used to fetch the user's\nown avatar URL or to query the URL of other users; either locally or\non remote homeservers.",
+        "operationId" : "getAvatar",
         "parameters" : [ {
           "in" : "path",
           "type" : "string",
@@ -2820,6 +2800,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "AvatarResponse",
               "properties" : {
                 "avatar_url" : {
                   "type" : "string",
@@ -2839,6 +2820,7 @@
       "get" : {
         "summary" : "Get this user's profile information.",
         "description" : "Get the combined profile information for this user. This API may be used\nto fetch the user's own profile information or other users; either\nlocally or on remote homeservers. This API may return keys which are not\nlimited to ``displayname`` or ``avatar_url``.",
+        "operationId" : "getUserProfile",
         "parameters" : [ {
           "in" : "path",
           "type" : "string",
@@ -2855,6 +2837,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "UserProfileResponse",
               "properties" : {
                 "avatar_url" : {
                   "type" : "string",
@@ -2878,6 +2861,7 @@
       "get" : {
         "summary" : "Gets the current pushers for the authenticated user",
         "description" : "Gets all currently active pushers for the authenticated user",
+        "operationId" : "getPushers",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -2889,6 +2873,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "PushersResponse",
               "properties" : {
                 "pushers" : {
                   "type" : "array",
@@ -2951,13 +2936,14 @@
       "post" : {
         "summary" : "Modify a pusher for this user on the homeserver.",
         "description" : "This endpoint allows the creation, modification and deletion of `pushers`_\nfor this user ID. The behaviour of this endpoint varies depending on the\nvalues in the JSON body.",
+        "operationId" : "setPushers",
         "security" : [ {
           "accessToken" : [ ]
         } ],
         "parameters" : [ {
           "in" : "body",
-          "name" : "pusher",
           "description" : "The pusher information",
+          "name" : "PushersRequest",
           "required" : true,
           "schema" : {
             "type" : "object",
@@ -3015,9 +3001,6 @@
             "description" : "The pusher was set.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "400" : {
@@ -3043,6 +3026,7 @@
       "get" : {
         "summary" : "Retrieve all push rulesets.",
         "description" : "Retrieve all push rulesets for this user. Clients can \"drill-down\" on\nthe rulesets by suffixing a ``scope`` to this path e.g.\n``/pushrules/global/``. This will return a subset of this data under the\nspecified key e.g. the ``global`` key.",
+        "operationId" : "getPushRules",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3051,6 +3035,7 @@
             "description" : "All the push rulesets for this user.",
             "schema" : {
               "type" : "object",
+              "title" : "PushRulesResponse",
               "required" : [ "global" ],
               "properties" : {
                 "global" : {
@@ -3075,6 +3060,7 @@
       "get" : {
         "summary" : "Retrieve a push rule.",
         "description" : "Retrieve a single specified push rule.",
+        "operationId" : "getPushRule",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3119,6 +3105,7 @@
       "delete" : {
         "summary" : "Delete a push rule.",
         "description" : "This endpoint removes the push rule defined in the path.",
+        "operationId" : "deletePushRule",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3150,9 +3137,6 @@
             "description" : "The push rule was deleted.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           }
         },
@@ -3161,6 +3145,7 @@
       "put" : {
         "summary" : "Add or change a push rule.",
         "description" : "This endpoint allows the creation, modification and deletion of pushers\nfor this user ID. The behaviour of this endpoint varies depending on the\nvalues in the JSON body.",
+        "operationId" : "modifyPushRule",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3202,7 +3187,7 @@
           "description" : "This makes the new rule the next-less important rule relative to the\ngiven user defined rule. It is not possible to add a rule relative\nto a predefined server rule."
         }, {
           "in" : "body",
-          "name" : "pushrule",
+          "name" : "PushRuleRequest",
           "description" : "The push rule data. Additional top-level keys may be present depending\non the parameters for the rule ``kind``.",
           "required" : true,
           "schema" : {
@@ -3238,9 +3223,6 @@
             "description" : "The pusher was set.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "400" : {
@@ -3266,6 +3248,7 @@
       "get" : {
         "summary" : "Get whether a push rule is enabled",
         "description" : "This endpoint gets whether the specified push rule is enabled.",
+        "operationId" : "isPushRuleEnabled",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3300,6 +3283,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "PushRuleEnabledResponse",
               "properties" : {
                 "enabled" : {
                   "type" : "boolean",
@@ -3314,6 +3298,7 @@
       "put" : {
         "summary" : "Enable or disable a push rule.",
         "description" : "This endpoint allows clients to enable or disable the specified push rule.",
+        "operationId" : "setPushRuleStatus",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3342,10 +3327,11 @@
         }, {
           "in" : "body",
           "name" : "body",
-          "description" : "Whether the push rule is enabled or not.\n",
+          "description" : "Whether the push rule is enabled or not.",
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "PushRuleStatusRequest",
             "properties" : {
               "enabled" : {
                 "type" : "boolean",
@@ -3361,9 +3347,6 @@
             "description" : "The push rule was enabled or disabled.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           }
         },
@@ -3374,6 +3357,7 @@
       "get" : {
         "summary" : "The actions for a push rule",
         "description" : "This endpoint get the actions for the specified push rule.",
+        "operationID" : "getPushRuleActions",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3408,6 +3392,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "PushRuleActionsResponse",
               "properties" : {
                 "actions" : {
                   "type" : "array",
@@ -3425,6 +3410,7 @@
       "put" : {
         "summary" : "Set the actions for a push rule.",
         "description" : "This endpoint allows clients to change the actions of a push rule.\nThis can be used to change the actions of builtin rules.",
+        "operationId" : "setPushRuleActions",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3457,6 +3443,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "PushRuleActionsRequest",
             "properties" : {
               "actions" : {
                 "type" : "array",
@@ -3476,9 +3463,6 @@
             "description" : "The actions for the push rule were set.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           }
         },
@@ -3611,6 +3595,7 @@
       "post" : {
         "summary" : "Register for an account on this homeserver.",
         "description" : "This API endpoint uses the `User-Interactive Authentication API`_.\n\nRegister for an account on this homeserver.\n\nThere are two kinds of user account:\n\n- `user` accounts. These accounts may use the full API described in this specification.\n\n- `guest` accounts. These accounts may have limited permissions and may not be supported by all servers.\n\nIf registration is successful, this endpoint will issue an access token\nthe client can use to authorize itself in subsequent requests.\n\nIf the client does not supply a ``device_id``, the server must\nauto-generate one.\n\nThe returned access token must be associated with the ``device_id``\nsupplied by the client or generated by the server. The server may\ninvalidate any access token previously associated with that device. See\n`Relationship between access tokens and devices`_.",
+        "operationId" : "registerAccount",
         "parameters" : [ {
           "in" : "query",
           "name" : "kind",
@@ -3625,6 +3610,7 @@
           "name" : "body",
           "schema" : {
             "type" : "object",
+            "title" : "RegisterAccountRequest",
             "properties" : {
               "auth" : {
                 "description" : "Additional authentication information for the\nuser-interactive authentication API. Note that this\ninformation is *not* used to define how the registered user\nshould be authenticated, but is instead used to\nauthenticate the ``register`` call itself. It should be\nleft empty, or omitted, unless an earlier call returned an\nresponse with status code 401.",
@@ -3666,6 +3652,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "RegisterAccountResponse",
               "properties" : {
                 "user_id" : {
                   "type" : "string",
@@ -3712,6 +3699,7 @@
       "post" : {
         "summary" : "Requests a validation token be sent to the given email address for the purpose of registering an account",
         "description" : "Proxies the identity server API ``validate/email/requestToken``, but\nfirst checks that the given email address is not already associated\nwith an account on this Home Server. Note that, for consistency,\nthis API takes JSON objects, though the Identity Server API takes\n``x-www-form-urlencoded`` parameters. See the Identity Server API for\nfurther information.",
+        "operationId" : "requestEmailValidation",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -3747,9 +3735,6 @@
             "description" : "An email has been sent to the specified address.\nNote that this may be an email containing the validation token or it may be informing\nthe user of an error.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "400" : {
@@ -3768,6 +3753,7 @@
       "post" : {
         "summary" : "Changes a user's password.",
         "description" : "Changes the password for an account on this homeserver.\n\nThis API endpoint uses the `User-Interactive Authentication API`_.\n\nAn access token should be submitted to this endpoint if the client has\nan active session.\n\nThe homeserver may change the flows available depending on whether a\nvalid access token is provided.",
+        "operationId" : "changePassword",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3776,6 +3762,7 @@
           "name" : "body",
           "schema" : {
             "type" : "object",
+            "title" : "ChangePasswordRequest",
             "properties" : {
               "new_password" : {
                 "type" : "string",
@@ -3795,9 +3782,6 @@
             "description" : "The password has been changed.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "401" : {
@@ -3831,6 +3815,7 @@
       "post" : {
         "summary" : "Deactivate a user's account.",
         "description" : "Deactivate the user's account, removing all ability for the user to\nlogin again.\n\nThis API endpoint uses the `User-Interactive Authentication API`_.\n\nAn access token should be submitted to this endpoint if the client has\nan active session.\n\nThe homeserver may change the flows available depending on whether a\nvalid access token is provided.",
+        "operationId" : "deactivateAccount",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3839,6 +3824,7 @@
           "name" : "body",
           "schema" : {
             "type" : "object",
+            "title" : "DeactivateAccountRequest",
             "properties" : {
               "auth" : {
                 "description" : "Additional authentication information for the user-interactive authentication API.",
@@ -3852,9 +3838,6 @@
             "description" : "The account has been deactivated.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "401" : {
@@ -4318,6 +4301,7 @@
       "post" : {
         "summary" : "Perform a server-side search.",
         "description" : "Performs a full text search across different categories.",
+        "operationId" : "search",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -4332,6 +4316,7 @@
           "name" : "body",
           "schema" : {
             "type" : "object",
+            "title" : "SearchRequest",
             "example" : "{\n  \"search_categories\": {\n    \"room_events\": {\n      \"keys\": [\n        \"content.body\"\n      ],\n      \"search_term\": \"martians and men\"\n    }\n  },\n  \"order_by\": \"recent\",\n  \"groupings\": {\n    \"group_by\": [\n      {\n        \"key\": \"room_id\"\n      }\n    ]\n  }\n}",
             "properties" : {
               "search_categories" : {
@@ -4433,7 +4418,7 @@
             "description" : "Results of the search.",
             "schema" : {
               "type" : "object",
-              "title" : "Results",
+              "title" : "SearchResponse",
               "required" : [ "search_categories" ],
               "properties" : {
                 "search_categories" : {
@@ -4795,6 +4780,7 @@
       "get" : {
         "summary" : "List the tags for a room.",
         "description" : "List the tags set by a user on a room.",
+        "operationId" : "getUserTags",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -4818,10 +4804,13 @@
             "description" : "The list of tags for the user for the room.",
             "schema" : {
               "type" : "object",
+              "title" : "UserTagsResponse",
               "properties" : {
                 "tags" : {
-                  "title" : "Tags",
-                  "type" : "object"
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
                 }
               }
             },
@@ -4837,6 +4826,7 @@
       "put" : {
         "summary" : "Add a tag to a room.",
         "description" : "Add a tag to the room.",
+        "operationId" : "addUserTag",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -4868,15 +4858,15 @@
           "description" : "Extra data for the tag, e.g. ordering.",
           "schema" : {
             "type" : "object",
-            "example" : "{\"order\": \"1\"}"
+            "example" : "{\"order\": \"1\"}",
+            "additionalProperties" : {
+              "type" : "object"
+            }
           }
         } ],
         "responses" : {
           "200" : {
             "description" : "The tag was successfully added.",
-            "schema" : {
-              "type" : "object"
-            },
             "examples" : {
               "application/json" : "{}"
             }
@@ -4887,6 +4877,7 @@
       "delete" : {
         "summary" : "Remove a tag from the room.",
         "description" : "Remove a tag from the room.",
+        "operationId" : "deleteUserTag",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -4915,9 +4906,6 @@
         "responses" : {
           "200" : {
             "description" : "The tag was successfully removed",
-            "schema" : {
-              "type" : "object"
-            },
             "examples" : {
               "application/json" : "{}"
             }
@@ -4930,6 +4918,7 @@
       "post" : {
         "summary" : "Invite a user to participate in a particular room.",
         "description" : ".. _invite-by-third-party-id-endpoint:\n\n*Note that there are two forms of this API, which are documented separately.\nThis version of the API does not require that the inviter know the Matrix\nidentifier of the invitee, and instead relies on third party identifiers.\nThe homeserver uses an identity server to perform the mapping from\nthird party identifier to a Matrix identifier. The other is documented in the*\n`joining rooms section`_.\n\nThis API invites a user to participate in a particular room.\nThey do not start participating in the room until they actually join the\nroom.\n\nOnly users currently in a particular room can invite other users to\njoin that room.\n\nIf the identity server did know the Matrix user identifier for the\nthird party identifier, the homeserver will append a ``m.room.member``\nevent to the room.\n\nIf the identity server does not know a Matrix user identifier for the\npassed third party identifier, the homeserver will issue an invitation\nwhich can be accepted upon providing proof of ownership of the third\nparty identifier. This is achieved by the identity server generating a\ntoken, which it gives to the inviting homeserver. The homeserver will\nadd an ``m.room.third_party_invite`` event into the graph for the room,\ncontaining that token.\n\nWhen the invitee binds the invited third party identifier to a Matrix\nuser ID, the identity server will give the user a list of pending\ninvitations, each containing:\n\n- The room ID to which they were invited\n\n- The token given to the homeserver\n\n- A signature of the token, signed with the identity server's private key\n\n- The matrix user ID who invited them to the room\n\nIf a token is requested from the identity server, the homeserver will\nappend a ``m.room.third_party_invite`` event to the room.\n\n.. _joining rooms section: `invite-by-user-id-endpoint`_",
+        "operationId" : "roomInvite",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -4946,6 +4935,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
+            "title" : "RoomInviteRequest",
             "example" : "{\n  \"id_server\": \"matrix.org\",\n  \"medium\": \"email\",\n  \"address\": \"cheeky@monkey.com\"\n}",
             "properties" : {
               "id_server" : {
@@ -4969,9 +4959,6 @@
             "description" : "The user has been invited to join the room.",
             "examples" : {
               "application/json" : "{}"
-            },
-            "schema" : {
-              "type" : "object"
             }
           },
           "403" : {
@@ -4994,6 +4981,7 @@
       "put" : {
         "summary" : "Send an event to a given set of devices.",
         "description" : "This endpoint is used to send send-to-device events to a set of\nclient devices.",
+        "operationId" : "sendToDevice",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -5017,7 +5005,7 @@
           "required" : true,
           "schema" : {
             "type" : "object",
-            "title" : "body",
+            "title" : "SendToDeviceRequest",
             "properties" : {
               "messages" : {
                 "type" : "object",
@@ -5145,7 +5133,8 @@
     "/client/r0/voip/turnServer" : {
       "get" : {
         "summary" : "Obtain TURN server credentials.",
-        "description" : "This API provides credentials for the client to use when initiating\ncalls.",
+        "description" : "This API provides credentials for the client to use when initiating calls.",
+        "operationId" : "getTurnCredentials",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -5157,6 +5146,7 @@
             },
             "schema" : {
               "type" : "object",
+              "title" : "TurnCredentialsResponse",
               "properties" : {
                 "username" : {
                   "type" : "string",
@@ -5196,6 +5186,40 @@
   "produces" : [ "application/json" ],
   "schemes" : [ "http" ],
   "definitions" : {
+    "ThirdParty" : {
+      "type" : "object",
+      "description" : "A signature of an ``m.third_party_invite`` token to prove that this user owns a third party identity which has been invited to the room.",
+      "properties" : {
+        "sender" : {
+          "type" : "string",
+          "description" : "The Matrix ID of the user who issued the invite."
+        },
+        "mxid" : {
+          "type" : "string",
+          "description" : "The Matrix ID of the invitee."
+        },
+        "token" : {
+          "type" : "string",
+          "description" : "The state key of the m.third_party_invite event."
+        },
+        "signatures" : {
+          "type" : "object",
+          "description" : "A signatures object containing a signature of the entire signed object.",
+          "title" : "Signatures"
+        }
+      },
+      "required" : [ "sender", "mxid", "token", "signatures" ],
+      "example" : "{\n    \"sender\": \"@cat:the.hat\",\n    \"mxid\": \"@green:eggs.ham\",\n    \"token\": \"random8nonce\",\n    \"signatures\": {\n      \"horton.hears\": {\n        \"ed25519:0\": \"some9signature\"\n      }\n    }\n}"
+    },
+    "RoomIdResponse" : {
+      "type" : "object",
+      "properties" : {
+        "room_id" : {
+          "type" : "string",
+          "description" : "RoomId of joined room"
+        }
+      }
+    },
     "PublicRoomsResult" : {
       "type" : "object",
       "description" : "A list of the rooms on the server.",
@@ -5798,6 +5822,58 @@
       } ],
       "x-origin" : "matrix-doc/event-schemas/schema/m.room.member"
     },
+    "MPresence" : {
+      "type" : "object",
+      "description" : "Informs the client of a user's presence state change.",
+      "x-title" : "Presence Event",
+      "x-discriminator-value" : "m.presence",
+      "allOf" : [ {
+        "$ref" : "#/definitions/Event"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "object",
+            "properties" : {
+              "avatar_url" : {
+                "type" : "string",
+                "description" : "The current avatar URL for this user, if any."
+              },
+              "displayname" : {
+                "type" : "string",
+                "description" : "The current display name for this user, if any."
+              },
+              "last_active_ago" : {
+                "type" : "number",
+                "description" : "The last time since this used performed some action, in milliseconds."
+              },
+              "presence" : {
+                "type" : "string",
+                "description" : "The presence state for this user.",
+                "enum" : [ "online", "offline", "unavailable" ]
+              },
+              "currently_active" : {
+                "type" : "boolean",
+                "description" : "Whether the user is currently active"
+              },
+              "user_id" : {
+                "type" : "string",
+                "description" : "The user's ID."
+              }
+            },
+            "required" : [ "presence", "user_id" ]
+          },
+          "event_id" : {
+            "type" : "string"
+          },
+          "sender" : {
+            "type" : "string"
+          }
+        }
+      } ],
+      "required" : [ "event_id", "type", "content" ],
+      "x-origin" : "matrix-doc/event-schemas/schema/m.presence"
+    },
     "PushRuleset" : {
       "type" : "object",
       "properties" : {
@@ -6180,58 +6256,6 @@
         }
       } ],
       "x-origin" : "matrix-doc/event-schemas/schema/m.direct"
-    },
-    "MPresence" : {
-      "type" : "object",
-      "description" : "Informs the client of a user's presence state change.",
-      "x-title" : "Presence Event",
-      "x-discriminator-value" : "m.presence",
-      "allOf" : [ {
-        "$ref" : "#/definitions/Event"
-      }, {
-        "type" : "object",
-        "properties" : {
-          "content" : {
-            "type" : "object",
-            "properties" : {
-              "avatar_url" : {
-                "type" : "string",
-                "description" : "The current avatar URL for this user, if any."
-              },
-              "displayname" : {
-                "type" : "string",
-                "description" : "The current display name for this user, if any."
-              },
-              "last_active_ago" : {
-                "type" : "number",
-                "description" : "The last time since this used performed some action, in milliseconds."
-              },
-              "presence" : {
-                "type" : "string",
-                "description" : "The presence state for this user.",
-                "enum" : [ "online", "offline", "unavailable" ]
-              },
-              "currently_active" : {
-                "type" : "boolean",
-                "description" : "Whether the user is currently active"
-              },
-              "user_id" : {
-                "type" : "string",
-                "description" : "The user's ID."
-              }
-            },
-            "required" : [ "presence", "user_id" ]
-          },
-          "event_id" : {
-            "type" : "string"
-          },
-          "sender" : {
-            "type" : "string"
-          }
-        }
-      } ],
-      "required" : [ "event_id", "type", "content" ],
-      "x-origin" : "matrix-doc/event-schemas/schema/m.presence"
     },
     "MPushRules" : {
       "type" : "object",
