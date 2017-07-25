@@ -206,7 +206,8 @@
           "200" : {
             "description" : "An email was sent to the given address"
           }
-        }
+        },
+        "tags" : [ "User data" ]
       }
     },
     "/client/r0/admin/whois/{userId}" : {
@@ -394,6 +395,7 @@
       "get" : {
         "summary" : "Redirect the user's browser to the CAS interface.",
         "description" : "A web-based Matrix client should instruct the user's browser to\nnavigate to this endpoint in order to log in via CAS.\n\nThe server MUST respond with an HTTP redirect to the CAS interface. The\nURI MUST include a ``service`` parameter giving the path of the\n|/login/cas/ticket|_ endpoint (including the ``redirectUrl`` query\nparameter).\n\nFor example, if the endpoint is called with\n``redirectUrl=https://client.example.com/?q=p``, it might redirect to\n``https://cas.example.com/?service=https%3A%2F%2Fserver.example.com%2F_matrix%2Fclient%2F%CLIENT_MAJOR_VERSION%%2Flogin%2Fcas%2Fticket%3FredirectUrl%3Dhttps%253A%252F%252Fclient.example.com%252F%253Fq%253Dp``.",
+        "operationId" : "casRedirect",
         "parameters" : [ {
           "in" : "query",
           "type" : "string",
@@ -410,13 +412,15 @@
               }
             }
           }
-        }
+        },
+        "tags" : [ "CAS authentication" ]
       }
     },
     "/client/r0/login/cas/ticket" : {
       "get" : {
         "summary" : "Receive and validate a CAS login ticket.",
         "description" : "Once the CAS server has authenticated the user, it will redirect the\nbrowser to this endpoint (assuming |/login/cas/redirect|_ gave it the\ncorrect ``service`` parameter).\n\nThe server MUST call ``/proxyValidate`` on the CAS server, to validate\nthe ticket supplied by the browser.\n\nIf validation is successful, the server must generate a Matrix login\ntoken. It must then respond with an HTTP redirect to the URI given in\nthe ``redirectUrl`` parameter, adding a ``loginToken`` query parameter\ngiving the generated token.\n\nIf validation is unsuccessful, the server should respond with a ``401\nUnauthorized`` error, the body of which will be displayed to the user.",
+        "operationId" : "casTicket",
         "parameters" : [ {
           "in" : "query",
           "type" : "string",
@@ -443,7 +447,8 @@
           "401" : {
             "description" : "The server was unable to validate the CAS ticket."
           }
-        }
+        },
+        "tags" : [ "CAS authentication" ]
       }
     },
     "/media/r0/upload" : {
@@ -456,13 +461,13 @@
           "name" : "Content-Type",
           "type" : "string",
           "description" : "The content type of the file being uploaded",
-          "example" : "Content-Type: audio/mpeg"
+          "x-example" : "Content-Type: audio/mpeg"
         }, {
           "in" : "query",
-          "type" : "string",
-          "example" : "War and Peace.pdf",
           "name" : "filename",
-          "description" : "The name of the file being uploaded"
+          "type" : "string",
+          "description" : "The name of the file being uploaded",
+          "x-example" : "War and Peace.pdf"
         }, {
           "in" : "body",
           "name" : "content",
@@ -1288,14 +1293,11 @@
         }, {
           "in" : "body",
           "name" : "ThirdParty",
-          "type" : "object",
           "schema" : {
             "type" : "object",
             "title" : "RoomJoinRequest",
-            "name" : "RoomJoinRequest",
             "properties" : {
               "third_party_signed" : {
-                "type" : "object",
                 "$ref" : "#/definitions/ThirdParty"
               }
             },
@@ -1356,7 +1358,6 @@
                 "title" : "ThirdPartySignedSigned",
                 "properties" : {
                   "signed" : {
-                    "type" : "object",
                     "$ref" : "#/definitions/ThirdParty"
                   }
                 },
@@ -3293,7 +3294,8 @@
               "required" : [ "enabled" ]
             }
           }
-        }
+        },
+        "tags" : [ "Push notifications" ]
       },
       "put" : {
         "summary" : "Enable or disable a push rule.",
@@ -3357,7 +3359,7 @@
       "get" : {
         "summary" : "The actions for a push rule",
         "description" : "This endpoint get the actions for the specified push rule.",
-        "operationID" : "getPushRuleActions",
+        "operationId" : "getPushRuleActions",
         "security" : [ {
           "accessToken" : [ ]
         } ],
@@ -3405,7 +3407,8 @@
               "required" : [ "actions" ]
             }
           }
-        }
+        },
+        "tags" : [ "Push notifications" ]
       },
       "put" : {
         "summary" : "Set the actions for a push rule.",
@@ -3746,7 +3749,8 @@
               "type" : "object"
             }
           }
-        }
+        },
+        "tags" : [ "User data" ]
       }
     },
     "/client/r0/account/password" : {
@@ -3808,7 +3812,8 @@
           "200" : {
             "description" : "An email was sent to the given address"
           }
-        }
+        },
+        "tags" : [ "User data" ]
       }
     },
     "/client/r0/account/deactivate" : {
@@ -5650,73 +5655,6 @@
       },
       "discriminator" : "type",
       "required" : [ "type" ],
-      "x-include" : [ {
-        "$ref" : "#/definitions/MCallAnswer"
-      }, {
-        "$ref" : "#/definitions/MCallCandidates"
-      }, {
-        "$ref" : "#/definitions/MCallHangup"
-      }, {
-        "$ref" : "#/definitions/MCallInvite"
-      }, {
-        "$ref" : "#/definitions/MDirect"
-      }, {
-        "$ref" : "#/definitions/MPresence"
-      }, {
-        "$ref" : "#/definitions/MPushRules"
-      }, {
-        "$ref" : "#/definitions/MReceipt"
-      }, {
-        "$ref" : "#/definitions/MRoomAliases"
-      }, {
-        "$ref" : "#/definitions/MRoomAvatar"
-      }, {
-        "$ref" : "#/definitions/MRoomCanonicalAlias"
-      }, {
-        "$ref" : "#/definitions/MRoomCreate"
-      }, {
-        "$ref" : "#/definitions/MRoomGuestAccess"
-      }, {
-        "$ref" : "#/definitions/MRoomHistoryVisibility"
-      }, {
-        "$ref" : "#/definitions/MRoomJoinRules"
-      }, {
-        "$ref" : "#/definitions/MRoomMember"
-      }, {
-        "$ref" : "#/definitions/MRoomMessage"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageFeedback"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMAudio"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMEmote"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMFile"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMImage"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMLocation"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMNotice"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMText"
-      }, {
-        "$ref" : "#/definitions/MRoomMessageMVideo"
-      }, {
-        "$ref" : "#/definitions/MRoomName"
-      }, {
-        "$ref" : "#/definitions/MRoomPowerLevels"
-      }, {
-        "$ref" : "#/definitions/MRoomRedaction"
-      }, {
-        "$ref" : "#/definitions/MRoomThirdPartyInvite"
-      }, {
-        "$ref" : "#/definitions/MRoomTopic"
-      }, {
-        "$ref" : "#/definitions/MTag"
-      }, {
-        "$ref" : "#/definitions/MTyping"
-      } ],
       "x-origin" : "matrix-doc/event-schemas/schema/core-event-schema/event.yaml"
     },
     "MRoomMember" : {
