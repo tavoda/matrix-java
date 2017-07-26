@@ -3807,6 +3807,7 @@
     "/client/r0/account/password/email/requestToken" : {
       "post" : {
         "summary" : "Requests a validation token be sent to the given email address for the purpose of resetting a user's password",
+        "operationId" : "requestPasswordReset",
         "description" : "Proxies the identity server API ``validate/email/requestToken``, but\nfirst checks that the given email address **is** associated with an account\non this Home Server. This API should be used to request\nvalidation tokens when authenticating for the\n`account/password` endpoint. This API's parameters and response are\nidentical to that of the HS API |/register/email/requestToken|_ except that\n`M_THREEPID_NOT_FOUND` may be returned if no account matching the\ngiven email address could be found. The server may instead send an\nemail to the given address prompting the user to create an account.\n`M_THREEPID_IN_USE` may not be returned.\n\n.. |/register/email/requestToken| replace:: ``/register/email/requestToken``\n\n.. _/register/email/requestToken: #post-matrix-client-%CLIENT_MAJOR_VERSION%-register-email-requesttoken",
         "responses" : {
           "200" : {
