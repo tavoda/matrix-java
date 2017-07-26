@@ -1,0 +1,1134 @@
+#compdef matrix-cli
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !
+# ! Note:
+# !
+# ! THIS SCRIPT HAS BEEN AUTOMATICALLY GENERATED USING
+# ! swagger-codegen (https://github.com/swagger-api/swagger-codegen)
+# ! FROM SWAGGER SPECIFICATION IN JSON.
+# !
+# ! Based on: https://github.com/Valodim/zsh-curl-completion/blob/master/_curl
+# !
+# ! Generated on: 2017-07-26T18:58:56.803+02:00
+# !
+# !
+# ! Installation:
+# !
+# ! Copy the _matrix-cli file to any directory under FPATH
+# ! environment variable (echo $FPATH)
+# !
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+local curcontext="$curcontext" state line ret=1
+typeset -A opt_args
+
+typeset -A mime_type_abbreviations
+# text/*
+mime_type_abbreviations[text]="text/plain"
+mime_type_abbreviations[html]="text/html"
+mime_type_abbreviations[md]="text/x-markdown"
+mime_type_abbreviations[csv]="text/csv"
+mime_type_abbreviations[css]="text/css"
+mime_type_abbreviations[rtf]="text/rtf"
+# application/*
+mime_type_abbreviations[json]="application/json"
+mime_type_abbreviations[xml]="application/xml"
+mime_type_abbreviations[yaml]="application/yaml"
+mime_type_abbreviations[js]="application/javascript"
+mime_type_abbreviations[bin]="application/octet-stream"
+mime_type_abbreviations[rdf]="application/rdf+xml"
+# image/*
+mime_type_abbreviations[jpg]="image/jpeg"
+mime_type_abbreviations[png]="image/png"
+mime_type_abbreviations[gif]="image/gif"
+mime_type_abbreviations[bmp]="image/bmp"
+mime_type_abbreviations[tiff]="image/tiff"
+
+#
+# Generate zsh completion string list for abbreviated mime types
+#
+get_mime_type_completions() {
+    typeset -a result
+    result=()
+    for k in "${(@k)mime_type_abbreviations}"; do
+        value=$mime_type_abbreviations[${k}]
+        #echo $value
+        result+=( "${k}[${value}]" )
+        #echo $result
+    done
+    echo "$result"
+}
+
+#
+# cURL crypto engines completion function
+#
+_curl_crypto_engine() {
+    local vals
+    vals=( ${${(f)"$(curl --engine list)":gs/ /}[2,$]} )
+    _describe -t outputs 'engines' vals && return 0
+}
+
+#
+# cURL post data completion functions=
+#
+_curl_post_data() {
+
+    # don't do anything further if this is raw content
+    compset -P '=' && _message 'raw content' && return 0
+
+    # complete filename or stdin for @ syntax
+    compset -P '*@' && {
+        local expl
+        _description files expl stdin
+        compadd "$expl[@]" - "-"
+        _files
+        return 0
+    }
+
+    # got a name already? expecting data.
+    compset -P '*=' && _message 'data value' && return 0
+
+    # otherwise, name (or @ or =) should be specified
+    _message 'data name' && return 0
+
+}
+
+
+local arg_http arg_ftp arg_other arg_proxy arg_crypto arg_connection arg_auth arg_input arg_output
+
+# HTTP Arguments
+arg_http=(''\
+  {-0,--http1.0}'[force use of use http 1.0 instead of 1.1]' \
+  {-b,--cookie}'[pass data to http server as cookie]:data or file' \
+  {-c,--cookie-jar}'[specify cookie file]:file name:_files' \
+  {-d,--data}'[send specified data as HTTP POST data]:data:{_curl_post_data}' \
+  '--data-binary[post HTTP POST data without any processing]:data:{_curl_post_data}' \
+  '--data-urlencode[post HTTP POST data, with url encoding]:data:{_curl_post_data}' \
+  {-f,--fail}'[enable failfast behavior for server errors]' \
+  '*'{-F,--form}'[add POST form data]:name=content' \
+  {-G,--get}'[use HTTP GET even with data (-d, --data, --data-binary)]' \
+  '*'{-H,--header}'[specify an extra header]:header' \
+  '--ignore-content-length[ignore Content-Length header]' \
+  {-i,--include}'[include HTTP header in the output]' \
+  {-j,--junk-session-cookies}'[discard all session cookies]' \
+  {-e,--referer}'[send url as referer]:referer url:_urls' \
+  {-L,--location}'[follow Location headers on http 3XX response]' \
+  '--location-trusted[like --location, but allows sending of auth data to redirected hosts]' \
+  '--max-redirs[set maximum number of redirection followings allowed]:number' \
+  {-J,--remote-header-name}'[use Content-Disposition for output file name]' \
+  {-O,--remote-name}'[write to filename parsed from url instead of stdout]' \
+  '--post301[do not convert POST to GET after following 301 Location response (follow RFC 2616/10.3.2)]' \
+  '--post302[do not convert POST to GET after following 302 Location response (follow RFC 2616/10.3.2)]' \
+  )
+
+# FTP arguments
+arg_ftp=(\
+  {-a,--append}'[append to target file instead of overwriting (FTP/SFTP)]' \
+  '--crlf[convert LF to CRLF in upload]' \
+  '--disable-eprt[disable use of EPRT and LPRT for active FTP transfers]' \
+  '--disable-epsv[disable use of EPSV for passive FTP transfers]' \
+  '--ftp-account[account data (FTP)]:data' \
+  '--ftp-alternative-to-user[command to send when USER and PASS commands fail (FTP)]:command' \
+  '--ftp-create-dirs[create paths remotely if it does not exist]' \
+  '--ftp-method[ftp method to use to reach a file (FTP)]:method:(multicwd ocwd singlecwd)' \
+  '--ftp-pasv[use passive mode for the data connection (FTP)]' \
+  '--ftp-skip-pasv-ip[do not use the ip the server suggests for PASV]' \
+  '--form-string[like --form, but do not parse content]:name=string' \
+  '--ftp-pret[send PRET before PASV]' \
+  '--ftp-ssl-ccc[use clear command channel (CCC) after authentication (FTP)]' \
+  '--ftp-ssl-ccc-mode[sets the CCC mode (FTP)]:mode:(active passive)' \
+  '--ftp-ssl-control[require SSL/TLS for FTP login, clear for transfer]' \
+  {-l,--list-only}'[list names only when listing directories (FTP)]' \
+  {-P,--ftp-port}'[use active mode, tell server to connect to specified address or interface (FTP]:address' \
+  '*'{-Q,--quote}'[send arbitrary command to the remote server before transfer (FTP/SFTP)]:command' \
+  )
+
+# Other Protocol arguments
+arg_other=(\
+  '--mail-from[specify From: address]:address' \
+  '--mail-rcpt[specify email recipient for SMTP, may be given multiple times]:address' \
+  {-t,--telnet-option}'[pass options to telnet protocol]:opt=val' \
+  '--tftp-blksize[set tftp BLKSIZE option]:value' \
+  )
+
+# Proxy arguments
+arg_proxy=(\
+  '--noproxy[list of hosts to connect directly to instead of through proxy]:no-proxy-list' \
+  {-p,--proxytunnel}'[tunnel non-http protocols through http proxy]' \
+  {-U,--proxy-user}'[specify the user name and password to use for proxy authentication]:user:password' \
+  '--proxy-anyauth[use any authentication method for proxy, default to most secure]' \
+  '--proxy-basic[use HTTP Basic authentication for proxy]' \
+  '--proxy-digest[use http digest authentication for proxy]' \
+  '--proxy-negotiate[enable GSS-Negotiate authentication for proxy]' \
+  '--proxy-ntlm[enable ntlm authentication for proxy]' \
+  '--proxy1.0[use http 1.0 proxy]:proxy url' \
+  {-x,--proxy}'[use specified proxy]:proxy url' \
+  '--socks5-gssapi-service[change service name for socks server]:servicename' \
+  '--socks5-gssapi-nec[allow unprotected exchange of protection mode negotiation]' \
+  )
+
+# Crypto arguments
+arg_crypto=(\
+  {-1,--tlsv1}'[Forces curl to use TLS version 1 when negotiating with a remote TLS server.]' \
+  {-2,--sslv2}'[Forces curl to use SSL version 2 when negotiating with a remote SSL server.]' \
+  {-3,--sslv3}'[Forces curl to use SSL version 3 when negotiating with a remote SSL server.]' \
+  '--ciphers[specifies which cipher to use for the ssl connection]:list of ciphers' \
+  '--crlfile[specify file with revoked certificates]:file' \
+  '--delegation[set delegation policy to use with GSS/kerberos]:delegation policy:(none policy always)' \
+  {-E,--cert}'[use specified client certificate]:certificate file:_files' \
+  '--engine[use selected OpenSSL crypto engine]:ssl crypto engine:{_curl_crypto_engine}' \
+  '--egd-file[set ssl entropy gathering daemon socket]:entropy socket:_files' \
+  '--cert-type[specify certificate type (PEM, DER, ENG)]:certificate type:(PEM DER ENG)' \
+  '--cacert[specify certificate file to verify the peer with]:CA certificate:_files' \
+  '--capath[specify a search path for certificate files]:CA certificate directory:_directories' \
+  '--hostpubmd5[check remote hosts public key]:md5 hash' \
+  {-k,--insecure}'[allow ssl to perform insecure ssl connections (ie, ignore certificate)]' \
+  '--key[ssl/ssh private key file name]:key file:_files' \
+  '--key-type[ssl/ssh private key file type]:file type:(PEM DER ENG)' \
+  '--pubkey[ssh public key file]:pubkey file:_files' \
+  '--random-file[set source of random data for ssl]:random source:_files' \
+  '--no-sessionid[disable caching of ssl session ids]' \
+  '--pass:phrase[passphrase for ssl/ssh private key]' \
+  '--ssl[try to use ssl/tls for connection, if available]' \
+  '--ssl-reqd[try to use ssl/tls for connection, fail if unavailable]' \
+  '--tlsauthtype[set TLS authentication type (only SRP supported!)]:authtype' \
+  '--tlsuser[set username for TLS authentication]:user' \
+  '--tlspassword[set password for TLS authentication]:password' \
+  )
+
+# Connection arguments
+arg_connection=(\
+  {-4,--ipv4}'[prefer ipv4]' \
+  {-6,--ipv6}'[prefer ipv6, if available]' \
+  {-B,--use-ascii}'[use ascii mode]' \
+  '--compressed[request a compressed transfer]' \
+  '--connect-timeout[timeout for connection phase]:seconds' \
+  {-I,--head}'[fetch http HEAD only (HTTP/FTP/FILE]' \
+  '--interface[work on a specific interface]:name' \
+  '--keepalive-time[set time to wait before sending keepalive probes]:seconds' \
+  '--limit-rate[specify maximum transfer rate]:speed' \
+  '--local-port[set preferred number or range of local ports to use]:num' \
+  {-N,--no-buffer}'[disable buffering of the output stream]' \
+  '--no-keepalive[disable use of keepalive messages in TCP connections]' \
+  '--raw[disable all http decoding and pass raw data]' \
+  '--resolve[provide a custom address for a specific host and port pair]:host\:port\:address' \
+  '--retry[specify maximum number of retries for transient errors]:num' \
+  '--retry-delay[specify delay between retries]:seconds' \
+  '--retry-max-time[maximum time to spend on retries]:seconds' \
+  '--tcp-nodelay[turn on TCP_NODELAY option]' \
+  {-y,--speed-time}'[specify time to abort after if download is slower than speed-limit]:time' \
+  {-Y,--speed-limit}'[specify minimum speed for --speed-time]:speed' \
+  )
+
+# Authentication arguments
+arg_auth=(\
+  '--anyauth[use any authentication method, default to most secure]' \
+  '--basic[use HTTP Basic authentication]' \
+  '--ntlm[enable ntlm authentication]' \
+  '--digest[use http digest authentication]' \
+  '--krb[use kerberos authentication]:auth:(clear safe confidential private)' \
+  '--negotiate[enable GSS-Negotiate authentication]' \
+  {-n,--netrc}'[scan ~/.netrc for login data]' \
+  '--netrc-optional[like --netrc, but does not make .netrc usage mandatory]' \
+  '--netrc-file[like --netrc, but specify file to use]:netrc file:_files' \
+  '--tr-encoding[request compressed transfer-encoding]' \
+  {-u,--user}'[specify user name and password for server authentication]:user\:password' \
+  )
+
+# Input arguments
+arg_input=(\
+  {-C,--continue-at}'[resume at offset ]:offset' \
+  {-g,--globoff}'[do not glob {}\[\] letters]' \
+  '--max-filesize[maximum filesize to download, fail for bigger files]:bytes' \
+  '--proto[specify allowed protocols for transfer]:protocols' \
+  '--proto-redir[specify allowed protocols for transfer after a redirect]:protocols' \
+  {-r,--range}'[set range of bytes to request (HTTP/FTP/SFTP/FILE)]:range' \
+  {-R,--remote-time}'[use timestamp of remote file for local file]' \
+  {-T,--upload-file}'[transfer file to remote url (using PUT for HTTP)]:file to upload:_files' \
+  '--url[specify a URL to fetch (multi)]:url:_urls' \
+  {-z,--time-cond}'[request downloaded file to be newer than date or given reference file]:date expression' \
+  )
+
+# Output arguments
+arg_output=(\
+  '--create-dirs[create local directory hierarchy as needed]' \
+  {-D,--dump-header}'[write protocol headers to file]:dump file:_files' \
+  {-o,--output}'[write to specified file instead of stdout]:output file:_files' \
+  {--progress-bar,-\#}'[display progress as a simple progress bar]' \
+  {-\#,--progress-bar}'[Make curl display progress as a simple progress bar instead of the standard, more informational, meter.]' \
+  {-R,--remote-time}'[use timestamp of remote file for local file]' \
+  '--raw[disable all http decoding and pass raw data]' \
+  {-s,--silent}'[silent mode, do not show progress meter or error messages]' \
+  {-S,--show-error}'[show errors in silent mode]' \
+  '--stderr[redirect stderr to specified file]:output file:_files' \
+  '--trace[enable full trace dump of all incoming and outgoing data]:trace file:_files' \
+  '--trace-ascii[enable full trace dump of all incoming and outgoing data, without hex data]:trace file:_files' \
+  '--trace-time[prepends a time stamp to each trace or verbose line that curl displays]' \
+  {-v,--verbose}'[output debug info]' \
+  {-w,--write-out}'[specify message to output on successful operation]:format string' \
+  '--xattr[store some file metadata in extended file attributes]' \
+  {-X,--request}'[specifies request method for HTTP server]:method:(GET POST PUT DELETE HEAD OPTIONS TRACE CONNECT PATCH LINK UNLINK)' \
+  )
+
+_arguments -C -s $arg_http $arg_ftp $arg_other $arg_crypto $arg_connection $arg_auth $arg_input $arg_output \
+  {-M,--manual}'[Print manual]' \
+  '*'{-K,--config}'[Use other config file to read arguments from]:config file:_files' \
+  '--libcurl[output libcurl code for the operation to file]:output file:_files' \
+  {-m,--max-time}'[Limit total time of operation]:seconds' \
+  {-s,--silent}'[Silent mode, do not show progress meter or error messages]' \
+  {-S,--show-error}'[Show errors in silent mode]' \
+  '--stderr[Redirect stderr to specified file]:output file:_files' \
+  '-q[Do not read settings from .curlrc (must be first option)]' \
+  {-h,--help}'[Print help and list of operations]' \
+  {-V,--version}'[Print service API version]' \
+  '--about[Print the information about service]' \
+  '--host[Specify the host URL]':URL:_urls \
+  '--dry-run[Print out the cURL command without executing it]' \
+  {-ac,--accept}'[Set the Accept header in the request]: :{_values "Accept mime type" $(get_mime_type_completions)}' \
+  {-ct,--content-type}'[Set the Content-type header in request]: :{_values "Content mime type" $(get_mime_type_completions)}' \
+  '1: :->ops' \
+  '*:: :->args' \
+  && ret=0
+
+
+case $state in
+  ops)
+    # Operations
+    _values "Operations" \
+            "casRedirect[Redirect the user's browser to the CAS interface.]" \
+            "casTicket[Receive and validate a CAS login ticket.]"             "deleteDevice[Delete a device]" \
+            "getDevice[Get a single device]" \
+            "getDevices[List registered devices for the current user]" \
+            "updateDevice[Update a device]"             "claimKeys[Claim one-time encryption keys.]" \
+            "downloadKeys[Download device identity keys.]" \
+            "getChangedKeys[Query users with recent device key updates.]" \
+            "uploadKeys[Upload end-to-end encryption keys.]"             "downloadMedia[Download content from the content repository.]" \
+            "downloadMediaFile[Download content from the content repository as a given filename.]" \
+            "downloadMediaThumbnail[Download a thumbnail of the content from the content repository.]" \
+            "uploadMedia[Upload some content to the content repository.]"             "getPresenceList[Get presence events for this presence list.]" \
+            "getPresenceStatus[Get this user's presence state.]" \
+            "setPresenceList[Add or remove users from this presence list.]" \
+            "setPresenceStatus[Update this user's presence state.]"             "deletePushRule[Delete a push rule.]" \
+            "getNotifications[Gets a list of events that the user has been notified about]" \
+            "getPushRule[Retrieve a push rule.]" \
+            "getPushRuleActions[The actions for a push rule]" \
+            "getPushRules[Retrieve all push rulesets.]" \
+            "getPushers[Gets the current pushers for the authenticated user]" \
+            "isPushRuleEnabled[Get whether a push rule is enabled]" \
+            "modifyPushRule[Add or change a push rule.]" \
+            "setPushRuleActions[Set the actions for a push rule.]" \
+            "setPushRuleStatus[Enable or disable a push rule.]" \
+            "setPushers[Modify a pusher for this user on the homeserver.]"             "createRoom[Create a new room]"             "createRoomAlias[Create a new mapping from room alias to room ID.]" \
+            "deleteRoomAlias[Remove a mapping of room alias to room ID.]" \
+            "getRoomId[Get the room ID corresponding to this room alias.]"             "filterPublicRooms[Lists the public rooms on the server with optional filter.]" \
+            "listPublicRooms[Lists the public rooms on the server.]"             "roomBanUser[Ban a user in the room.]" \
+            "roomForget[Stop the requesting user remembering about a particular room.]" \
+            "roomInvite[Invite a user to participate in a particular room.]" \
+            "roomInviteUser[Invite a user to participate in a particular room.]" \
+            "roomJoin[Start the requesting user participating in a particular room.]" \
+            "roomJoinByAlias[Start the requesting user participating in a particular room.]" \
+            "roomKickUser[Kick a user from the room.]" \
+            "roomLeave[Stop the requesting user participating in a particular room.]" \
+            "roomUnbanUser[Unban a user from the room.]"             "createFilter[Upload a new filter.]" \
+            "getAllRoomStates[Get all state events in the current state of a room.]" \
+            "getEvent[Get a single event by event ID.]" \
+            "getEventWithContext[Get events and state around the specified event.]" \
+            "getFilter[Download a filter]" \
+            "getRoomMembers[Get the m.room.member events for the room.]" \
+            "getRoomState[Get the state identified by the type, with the empty state key.]" \
+            "getRoomStateWithKey[Get the state identified by the type and key.]" \
+            "initialSync[Get the user's current state.]" \
+            "listEvents[Get a list of events for this room]" \
+            "listenForEvents[Listen on the event stream.]" \
+            "roomInitialSync[Snapshot the current state of a room and its most recent messages.]" \
+            "sendEvent[Send a message event to the given room.]" \
+            "sendReceipt[Send a receipt for the given event ID.]" \
+            "setRoomState[Send a state event to the given room.]" \
+            "setRoomStateWithKey[Send a state event to the given room.]" \
+            "setTypingState[Informs the server that the user has started or stopped typing.]" \
+            "stripEvent[Strips all non-integrity-critical information out of an event.]" \
+            "sync[Synchronise the client's state and receive new messages.]"             "search[Perform a server-side search.]"             "sendToDevice[Send an event to a given set of devices.]"             "versions[Gets the versions of the specification supported by the server.]" \
+            "whoIs[Gets information about a particular user.]"             "login[Authenticates the user.]" \
+            "logout[Invalidates a user access token]"             "addCredentials[Adds contact information to the user's account.]" \
+            "addUserTag[Add a tag to a room.]" \
+            "changePassword[Changes a user's password.]" \
+            "deactivateAccount[Deactivate a user's account.]" \
+            "deleteUserTag[Remove a tag from the room.]" \
+            "getAvatar[Get the user's avatar URL.]" \
+            "getDisplayName[Get the user's display name.]" \
+            "getUserIdentifiers[Gets a list of a user's third party identifiers.]" \
+            "getUserProfile[Get this user's profile information.]" \
+            "getUserTags[List the tags for a room.]" \
+            "registerAccount[Register for an account on this homeserver.]" \
+            "requestEmailValidation[Requests a validation token be sent to the given email address for the purpose of registering an account]" \
+            "requestEmailValidationAfterAdd[Requests a validation token be sent to the given email address for the purpose of adding an email address to an account]" \
+            "requestPasswordReset[Requests a validation token be sent to the given email address for the purpose of resetting a user's password]" \
+            "setAccountData[Set some account_data for the user.]" \
+            "setAccountDataForRoom[Set some account_data for the user.]" \
+            "setAvatar[Set the user's avatar URL.]" \
+            "setDisplayName[Set the user's display name.]"             "getTurnCredentials[Obtain TURN server credentials.]" 
+    _arguments "(--help)--help[Print information about operation]"
+
+    ret=0
+    ;;
+  args)
+    case $line[1] in
+      casRedirect)
+        local -a _op_arguments
+        _op_arguments=(
+                    "redirectUrl=:[QUERY] URI to which the user will be redirected after the homeserver has
+authenticated the user with CAS."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      casTicket)
+        local -a _op_arguments
+        _op_arguments=(
+                    "redirectUrl=:[QUERY] The &#39;&#39;redirectUrl&#39;&#39; originally provided by the client to
+|/login/cas/redirect|_."
+"ticket=:[QUERY] CAS authentication ticket."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      deleteDevice)
+        local -a _op_arguments
+        _op_arguments=(
+          "deviceId=:[PATH] The device to delete."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getDevice)
+        local -a _op_arguments
+        _op_arguments=(
+          "deviceId=:[PATH] The device to retrieve."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getDevices)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      updateDevice)
+        local -a _op_arguments
+        _op_arguments=(
+          "deviceId=:[PATH] The device to update."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      claimKeys)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      downloadKeys)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getChangedKeys)
+        local -a _op_arguments
+        _op_arguments=(
+                    "from=:[QUERY] The desired start point of the list. Should be the &#39;&#39;next_batch&#39;&#39; field
+from a response to an earlier call to |/sync|. Users who have not
+uploaded new device identity keys since this point, nor deleted
+existing devices with identity keys since then, will be excluded
+from the results."
+"to=:[QUERY] The desired end point of the list. Should be the &#39;&#39;next_batch&#39;&#39;
+field from a recent call to |/sync| - typically the most recent
+such call. This may be used by the server as a hint to check its
+caches are up to date."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      uploadKeys)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      downloadMedia)
+        local -a _op_arguments
+        _op_arguments=(
+          "serverName=:[PATH] The server name from the &#39;&#39;mxc://&#39;&#39; URI (the authoritory component)"
+"mediaId=:[PATH] The media ID from the &#39;&#39;mxc://&#39;&#39; URI (the path component)"
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      downloadMediaFile)
+        local -a _op_arguments
+        _op_arguments=(
+          "serverName=:[PATH] The server name from the &#39;&#39;mxc://&#39;&#39; URI (the authoritory component)"
+"mediaId=:[PATH] The media ID from the &#39;&#39;mxc://&#39;&#39; URI (the path component)"
+"fileName=:[PATH] The filename to give in the Content-Disposition"
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      downloadMediaThumbnail)
+        local -a _op_arguments
+        _op_arguments=(
+          "serverName=:[PATH] The server name from the &#39;&#39;mxc://&#39;&#39; URI (the authoritory component)"
+"mediaId=:[PATH] The media ID from the &#39;&#39;mxc://&#39;&#39; URI (the path component)"
+          "width=:[QUERY] The$(tput dim) desired $(tput sgr0)width of the thumbnail. The actual thumbnail may not
+match the size specified."
+"height=:[QUERY] The$(tput dim) desired $(tput sgr0)height of the thumbnail. The actual thumbnail may not
+match the size specified."
+"method=:[QUERY] The desired resizing method."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      uploadMedia)
+        local -a _op_arguments
+        _op_arguments=(
+                    "filename=:[QUERY] The name of the file being uploaded"
+          "Content-Type\::[HEADER] The content type of the file being uploaded"
+)
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getPresenceList)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose presence list should be retrieved."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getPresenceStatus)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose presence state to get."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setPresenceList)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose presence list is being modified."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setPresenceStatus)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose presence state to update."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      deletePushRule)
+        local -a _op_arguments
+        _op_arguments=(
+          "scope=:[PATH] &#39;&#39;global&#39;&#39; to specify global rules."
+"kind=:[PATH] The kind of rule"
+"ruleId=:[PATH] The identifier for the rule."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getNotifications)
+        local -a _op_arguments
+        _op_arguments=(
+                    "from=:[QUERY] Pagination token given to retrieve the next set of events."
+"limit=:[QUERY] Limit on the number of events to return in this request."
+"only=:[QUERY] Allows basic filtering of events returned. Supply &#39;&#39;highlight&#39;&#39;
+to return only events where the notification had the highlight
+tweak set."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getPushRule)
+        local -a _op_arguments
+        _op_arguments=(
+          "scope=:[PATH] &#39;&#39;global&#39;&#39; to specify global rules."
+"kind=:[PATH] The kind of rule"
+"ruleId=:[PATH] The identifier for the rule."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getPushRuleActions)
+        local -a _op_arguments
+        _op_arguments=(
+          "scope=:[PATH] Either &#39;&#39;global&#39;&#39; or &#39;&#39;device/&lt;profile_tag&gt;&#39;&#39; to specify global
+rules or device rules for the given &#39;&#39;profile_tag&#39;&#39;."
+"kind=:[PATH] The kind of rule"
+"ruleId=:[PATH] The identifier for the rule."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getPushRules)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getPushers)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      isPushRuleEnabled)
+        local -a _op_arguments
+        _op_arguments=(
+          "scope=:[PATH] Either &#39;&#39;global&#39;&#39; or &#39;&#39;device/&lt;profile_tag&gt;&#39;&#39; to specify global
+rules or device rules for the given &#39;&#39;profile_tag&#39;&#39;."
+"kind=:[PATH] The kind of rule"
+"ruleId=:[PATH] The identifier for the rule."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      modifyPushRule)
+        local -a _op_arguments
+        _op_arguments=(
+          "scope=:[PATH] &#39;&#39;global&#39;&#39; to specify global rules."
+"kind=:[PATH] The kind of rule"
+"ruleId=:[PATH] The identifier for the rule."
+          "before=:[QUERY] Use &#39;before&#39; with a &#39;&#39;rule_id&#39;&#39; as its value to make the new rule the
+next-most important rule with respect to the given user defined rule.
+It is not possible to add a rule relative to a predefined server rule."
+"after=:[QUERY] This makes the new rule the next-less important rule relative to the
+given user defined rule. It is not possible to add a rule relative
+to a predefined server rule."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setPushRuleActions)
+        local -a _op_arguments
+        _op_arguments=(
+          "scope=:[PATH] &#39;&#39;global&#39;&#39; to specify global rules."
+"kind=:[PATH] The kind of rule"
+"ruleId=:[PATH] The identifier for the rule."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setPushRuleStatus)
+        local -a _op_arguments
+        _op_arguments=(
+          "scope=:[PATH] &#39;&#39;global&#39;&#39; to specify global rules."
+"kind=:[PATH] The kind of rule"
+"ruleId=:[PATH] The identifier for the rule."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setPushers)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      createRoom)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      createRoomAlias)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomAlias=:[PATH] The room alias to set."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      deleteRoomAlias)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomAlias=:[PATH] The room alias to remove."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getRoomId)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomAlias=:[PATH] The room alias."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      filterPublicRooms)
+        local -a _op_arguments
+        _op_arguments=(
+                    "server=:[QUERY] The server to fetch the public room lists from. Defaults to the
+local server."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      listPublicRooms)
+        local -a _op_arguments
+        _op_arguments=(
+                    "limit=:[QUERY] Limit the number of results returned."
+"since=:[QUERY] A pagination token from a previous request, allowing clients to
+get the next (or previous) batch of rooms.
+The direction of pagination is specified solely by which token
+is supplied, rather than via an explicit flag."
+"server=:[QUERY] The server to fetch the public room lists from. Defaults to the
+local server."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomBanUser)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier (not alias) from which the user should be banned."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomForget)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier to forget."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomInvite)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier (not alias) to which to invite the user."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomInviteUser)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier (not alias) to which to invite the user."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomJoin)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier (not alias) to join."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomJoinByAlias)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomIdOrAlias=:[PATH] The room identifier or alias to join."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomKickUser)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier (not alias) from which the user should be kicked."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomLeave)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier to leave."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomUnbanUser)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room identifier (not alias) from which the user should be unbanned."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      createFilter)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The id of the user uploading the filter. The access token must be authorized to make requests for this user id."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getAllRoomStates)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to look up the state for."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getEvent)
+        local -a _op_arguments
+        _op_arguments=(
+          "eventId=:[PATH] The event ID to get."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getEventWithContext)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to get events from."
+"eventId=:[PATH] The event to get context around."
+          "limit=:[QUERY] The maximum number of events to return. Default: 10."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getFilter)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user ID to download a filter for."
+"filterId=:[PATH] The filter ID to download."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getRoomMembers)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to get the member events for."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getRoomState)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to look up the state in."
+"eventType=:[PATH] The type of state to look up."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getRoomStateWithKey)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to look up the state in."
+"eventType=:[PATH] The type of state to look up."
+"stateKey=:[PATH] The key of the state to look up."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      initialSync)
+        local -a _op_arguments
+        _op_arguments=(
+                    "limit=:[QUERY] The maximum number of messages to return for each room."
+"archived=true:[QUERY] Whether to include rooms that the user has left. If &#39;&#39;false&#39;&#39; then
+only rooms that the user has been invited to or has joined are
+included. If set to &#39;&#39;true&#39;&#39; then rooms that the user has left are
+included as well. By default this is &#39;&#39;false&#39;&#39;."
+          "archived=false:[QUERY] Whether to include rooms that the user has left. If &#39;&#39;false&#39;&#39; then
+only rooms that the user has been invited to or has joined are
+included. If set to &#39;&#39;true&#39;&#39; then rooms that the user has left are
+included as well. By default this is &#39;&#39;false&#39;&#39;."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      listEvents)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to get events from."
+          "from=:[QUERY] The token to start returning events from. This token can be obtained
+from a &#39;&#39;prev_batch&#39;&#39; token returned for each room by the sync API,
+or from a &#39;&#39;start&#39;&#39; or &#39;&#39;end&#39;&#39; token returned by a previous request
+to this endpoint."
+"to=:[QUERY] The token to stop returning events at. This token can be obtained from
+a &#39;&#39;prev_batch&#39;&#39; token returned for each room by the sync endpoint,
+or from a &#39;&#39;start&#39;&#39; or &#39;&#39;end&#39;&#39; token returned by a previous request to
+this endpoint."
+"dir=:[QUERY] The direction to return events from."
+"limit=:[QUERY] The maximum number of events to return. Default: 10."
+"filter=:[QUERY] A JSON RoomEventFilter to filter returned events with."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      listenForEvents)
+        local -a _op_arguments
+        _op_arguments=(
+                    "from=:[QUERY] The token to stream from. This token is either from a previous
+request to this API or from the initial sync API."
+"timeout=:[QUERY] The maximum time in milliseconds to wait for an event."
+"room_id=:[QUERY] The room ID for which events should be returned."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      roomInitialSync)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to get the data."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      sendEvent)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to send the event to."
+"eventType=:[PATH] The type of event to send."
+"txnId=:[PATH] The transaction ID for this event. Clients should generate an
+ID unique across requests with the same access token; it will be
+used by the server to ensure idempotency of requests."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      sendReceipt)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room in which to send the event."
+"receiptType=:[PATH] The type of receipt to send."
+"eventId=:[PATH] The event ID to acknowledge up to."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setRoomState)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to set the state in"
+"eventType=:[PATH] The type of event to send."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setRoomStateWithKey)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room to set the state in"
+"eventType=:[PATH] The type of event to send."
+"stateKey=:[PATH] The state_key for the state to send. Defaults to the empty string."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setTypingState)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user who has started to type."
+"roomId=:[PATH] The room in which the user is typing."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      stripEvent)
+        local -a _op_arguments
+        _op_arguments=(
+          "roomId=:[PATH] The room from which to redact the event."
+"eventId=:[PATH] The ID of the event to redact"
+"txnId=:[PATH] The transaction ID for this event. Clients should generate a
+unique ID; it will be used by the server to ensure idempotency of requests."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      sync)
+        local -a _op_arguments
+        _op_arguments=(
+                    "filter=:[QUERY] The ID of a filter created using the filter API or a filter JSON
+object encoded as a string. The server will detect whether it is
+an ID or a JSON object by whether the first character is a &#39;&#39;\&quot;{\&quot;&#39;&#39;
+open brace. Passing the JSON inline is best suited to one off
+requests. Creating a filter using the filter API is recommended for
+clients that reuse the same filter multiple times, for example in
+long poll requests."
+"since=:[QUERY] A point in time to continue a sync from."
+"full_state=true:[QUERY] Controls whether to include the full state for all rooms the user
+is a member of.
+
+If this is set to &#39;&#39;true&#39;&#39;, then all state events will be returned,
+even if &#39;&#39;since&#39;&#39; is non-empty. The timeline will still be limited
+by the &#39;&#39;since&#39;&#39; parameter. In this case, the &#39;&#39;timeout&#39;&#39; parameter
+will be ignored and the query will return immediately, possibly with
+an empty timeline.
+
+If &#39;&#39;false&#39;&#39;, and &#39;&#39;since&#39;&#39; is non-empty, only state which has
+changed since the point indicated by &#39;&#39;since&#39;&#39; will be returned.
+
+By default, this is &#39;&#39;false&#39;&#39;."
+          "full_state=false:[QUERY] Controls whether to include the full state for all rooms the user
+is a member of.
+
+If this is set to &#39;&#39;true&#39;&#39;, then all state events will be returned,
+even if &#39;&#39;since&#39;&#39; is non-empty. The timeline will still be limited
+by the &#39;&#39;since&#39;&#39; parameter. In this case, the &#39;&#39;timeout&#39;&#39; parameter
+will be ignored and the query will return immediately, possibly with
+an empty timeline.
+
+If &#39;&#39;false&#39;&#39;, and &#39;&#39;since&#39;&#39; is non-empty, only state which has
+changed since the point indicated by &#39;&#39;since&#39;&#39; will be returned.
+
+By default, this is &#39;&#39;false&#39;&#39;."
+"set_presence=:[QUERY] Controls whether the client is automatically marked as online by
+polling this API. If this parameter is omitted then the client is
+automatically marked as online when it uses this API. Otherwise if
+the parameter is set to \&quot;offline\&quot; then the client is not marked as
+being online when it uses this API."
+"timeout=:[QUERY] The maximum time to poll in milliseconds before returning this
+request."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      search)
+        local -a _op_arguments
+        _op_arguments=(
+                    "next_batch=:[QUERY] The point to return events from. If given, this should be a
+&#39;next_batch&#39; result from a previous call to this endpoint."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      sendToDevice)
+        local -a _op_arguments
+        _op_arguments=(
+          "eventType=:[PATH] The type of event to send."
+"txnId=:[PATH] The transaction ID for this event. Clients should generate an
+ID unique across requests with the same access token; it will be
+used by the server to ensure idempotency of requests."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      versions)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      whoIs)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user to look up."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      login)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      logout)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      addCredentials)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      addUserTag)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The id of the user to add a tag for. The access token must be
+authorized to make requests for this user id."
+"roomId=:[PATH] The id of the room to add a tag to."
+"tag=:[PATH] The tag to add."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      changePassword)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      deactivateAccount)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      deleteUserTag)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The id of the user to remove a tag for. The access token must be
+authorized to make requests for this user id."
+"roomId=:[PATH] The id of the room to remove a tag from."
+"tag=:[PATH] The tag to remove."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getAvatar)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose avatar URL to get."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getDisplayName)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose display name to get."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getUserIdentifiers)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getUserProfile)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose profile information to get."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getUserTags)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The id of the user to get tags for. The access token must be
+authorized to make requests for this user id."
+"roomId=:[PATH] The id of the room to get tags for."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      registerAccount)
+        local -a _op_arguments
+        _op_arguments=(
+                    "kind=:[QUERY] The kind of account to register. Defaults to &#39;user&#39;."
+          )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      requestEmailValidation)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      requestEmailValidationAfterAdd)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      requestPasswordReset)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setAccountData)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The id of the user to set account_data for. The access token must be
+authorized to make requests for this user id."
+"type=:[PATH] The event type of the account_data to set. Custom types should be
+namespaced to avoid clashes."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setAccountDataForRoom)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The id of the user to set account_data for. The access token must be
+authorized to make requests for this user id."
+"roomId=:[PATH] The id of the room to set account_data on."
+"type=:[PATH] The event type of the account_data to set. Custom types should be
+namespaced to avoid clashes."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setAvatar)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose avatar URL to set."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      setDisplayName)
+        local -a _op_arguments
+        _op_arguments=(
+          "userId=:[PATH] The user whose display name to set."
+                    )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+      getTurnCredentials)
+        local -a _op_arguments
+        _op_arguments=(
+                              )
+        _describe -t actions 'operations' _op_arguments -S '' && ret=0
+        ;;
+    esac
+    ;;
+
+esac
+
+return ret

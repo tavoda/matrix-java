@@ -1,0 +1,454 @@
+# matrix-cli completion                               -*- shell-script -*-
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !
+# ! Note:
+# !
+# ! THIS SCRIPT HAS BEEN AUTOMATICALLY GENERATED USING
+# ! swagger-codegen (https://github.com/swagger-api/swagger-codegen)
+# ! FROM SWAGGER SPECIFICATION IN JSON.
+# !
+# ! Generated on: 2017-07-26T18:58:56.803+02:00
+# !
+# !
+# ! System wide installation:
+# !
+# ! $ sudo cp matrix-cli.bash-completion /etc/bash-completion.d/matrix-cli
+# !
+# !
+# ! User home installation (add this line to .bash_profile):
+# !
+# ! [ -r ~/matrix-cli.bash-completion ] && source ~/matrix-cli.bash-completion
+# !
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+declare -A mime_type_abbreviations
+# text/*
+mime_type_abbreviations["text"]="text/plain"
+mime_type_abbreviations["html"]="text/html"
+mime_type_abbreviations["md"]="text/x-markdown"
+mime_type_abbreviations["csv"]="text/csv"
+mime_type_abbreviations["css"]="text/css"
+mime_type_abbreviations["rtf"]="text/rtf"
+# application/*
+mime_type_abbreviations["json"]="application/json"
+mime_type_abbreviations["xml"]="application/xml"
+mime_type_abbreviations["yaml"]="application/yaml"
+mime_type_abbreviations["js"]="application/javascript"
+mime_type_abbreviations["bin"]="application/octet-stream"
+mime_type_abbreviations["rdf"]="application/rdf+xml"
+# image/*
+mime_type_abbreviations["jpg"]="image/jpeg"
+mime_type_abbreviations["png"]="image/png"
+mime_type_abbreviations["gif"]="image/gif"
+mime_type_abbreviations["bmp"]="image/bmp"
+mime_type_abbreviations["tiff"]="image/tiff"
+
+
+#
+# Check if this is OSX, if so defined custom init_completion
+#
+if [[ `uname` =~ "Darwin" ]]; then
+    __osx_init_completion()
+    {
+        COMPREPLY=()
+        _get_comp_words_by_ref cur prev words cword
+    }
+fi
+
+_matrix-cli()
+{
+    local cur
+    local prev
+    local words
+    local cword
+
+    # The reference of currently selected REST operation
+    local operation=""
+
+    # The list of available operation in the REST service
+    # It's modelled as an associative array for efficient key lookup
+    declare -A operations
+    operations["casRedirect"]=1
+    operations["casTicket"]=1
+    operations["deleteDevice"]=1
+    operations["getDevice"]=1
+    operations["getDevices"]=1
+    operations["updateDevice"]=1
+    operations["claimKeys"]=1
+    operations["downloadKeys"]=1
+    operations["getChangedKeys"]=1
+    operations["uploadKeys"]=1
+    operations["downloadMedia"]=1
+    operations["downloadMediaFile"]=1
+    operations["downloadMediaThumbnail"]=1
+    operations["uploadMedia"]=1
+    operations["getPresenceList"]=1
+    operations["getPresenceStatus"]=1
+    operations["setPresenceList"]=1
+    operations["setPresenceStatus"]=1
+    operations["deletePushRule"]=1
+    operations["getNotifications"]=1
+    operations["getPushRule"]=1
+    operations["getPushRuleActions"]=1
+    operations["getPushRules"]=1
+    operations["getPushers"]=1
+    operations["isPushRuleEnabled"]=1
+    operations["modifyPushRule"]=1
+    operations["setPushRuleActions"]=1
+    operations["setPushRuleStatus"]=1
+    operations["setPushers"]=1
+    operations["createRoom"]=1
+    operations["createRoomAlias"]=1
+    operations["deleteRoomAlias"]=1
+    operations["getRoomId"]=1
+    operations["filterPublicRooms"]=1
+    operations["listPublicRooms"]=1
+    operations["roomBanUser"]=1
+    operations["roomForget"]=1
+    operations["roomInvite"]=1
+    operations["roomInviteUser"]=1
+    operations["roomJoin"]=1
+    operations["roomJoinByAlias"]=1
+    operations["roomKickUser"]=1
+    operations["roomLeave"]=1
+    operations["roomUnbanUser"]=1
+    operations["createFilter"]=1
+    operations["getAllRoomStates"]=1
+    operations["getEvent"]=1
+    operations["getEventWithContext"]=1
+    operations["getFilter"]=1
+    operations["getRoomMembers"]=1
+    operations["getRoomState"]=1
+    operations["getRoomStateWithKey"]=1
+    operations["initialSync"]=1
+    operations["listEvents"]=1
+    operations["listenForEvents"]=1
+    operations["roomInitialSync"]=1
+    operations["sendEvent"]=1
+    operations["sendReceipt"]=1
+    operations["setRoomState"]=1
+    operations["setRoomStateWithKey"]=1
+    operations["setTypingState"]=1
+    operations["stripEvent"]=1
+    operations["sync"]=1
+    operations["search"]=1
+    operations["sendToDevice"]=1
+    operations["versions"]=1
+    operations["whoIs"]=1
+    operations["login"]=1
+    operations["logout"]=1
+    operations["addCredentials"]=1
+    operations["addUserTag"]=1
+    operations["changePassword"]=1
+    operations["deactivateAccount"]=1
+    operations["deleteUserTag"]=1
+    operations["getAvatar"]=1
+    operations["getDisplayName"]=1
+    operations["getUserIdentifiers"]=1
+    operations["getUserProfile"]=1
+    operations["getUserTags"]=1
+    operations["registerAccount"]=1
+    operations["requestEmailValidation"]=1
+    operations["requestEmailValidationAfterAdd"]=1
+    operations["requestPasswordReset"]=1
+    operations["setAccountData"]=1
+    operations["setAccountDataForRoom"]=1
+    operations["setAvatar"]=1
+    operations["setDisplayName"]=1
+    operations["getTurnCredentials"]=1
+
+    # An associative array of operations to their parameters
+    # Only include path, query and header parameters
+    declare -A operation_parameters
+    operation_parameters["casRedirect"]="redirectUrl= "
+    operation_parameters["casTicket"]="redirectUrl= ticket= "
+    operation_parameters["deleteDevice"]="deviceId= "
+    operation_parameters["getDevice"]="deviceId= "
+    operation_parameters["getDevices"]=""
+    operation_parameters["updateDevice"]="deviceId= "
+    operation_parameters["claimKeys"]=""
+    operation_parameters["downloadKeys"]=""
+    operation_parameters["getChangedKeys"]="from= to= "
+    operation_parameters["uploadKeys"]=""
+    operation_parameters["downloadMedia"]="serverName= mediaId= "
+    operation_parameters["downloadMediaFile"]="serverName= mediaId= fileName= "
+    operation_parameters["downloadMediaThumbnail"]="serverName= mediaId= width= height= method= "
+    operation_parameters["uploadMedia"]="filename= Content-Type: "
+    operation_parameters["getPresenceList"]="userId= "
+    operation_parameters["getPresenceStatus"]="userId= "
+    operation_parameters["setPresenceList"]="userId= "
+    operation_parameters["setPresenceStatus"]="userId= "
+    operation_parameters["deletePushRule"]="scope= kind= ruleId= "
+    operation_parameters["getNotifications"]="from= limit= only= "
+    operation_parameters["getPushRule"]="scope= kind= ruleId= "
+    operation_parameters["getPushRuleActions"]="scope= kind= ruleId= "
+    operation_parameters["getPushRules"]=""
+    operation_parameters["getPushers"]=""
+    operation_parameters["isPushRuleEnabled"]="scope= kind= ruleId= "
+    operation_parameters["modifyPushRule"]="scope= kind= ruleId= before= after= "
+    operation_parameters["setPushRuleActions"]="scope= kind= ruleId= "
+    operation_parameters["setPushRuleStatus"]="scope= kind= ruleId= "
+    operation_parameters["setPushers"]=""
+    operation_parameters["createRoom"]=""
+    operation_parameters["createRoomAlias"]="roomAlias= "
+    operation_parameters["deleteRoomAlias"]="roomAlias= "
+    operation_parameters["getRoomId"]="roomAlias= "
+    operation_parameters["filterPublicRooms"]="server= "
+    operation_parameters["listPublicRooms"]="limit= since= server= "
+    operation_parameters["roomBanUser"]="roomId= "
+    operation_parameters["roomForget"]="roomId= "
+    operation_parameters["roomInvite"]="roomId= "
+    operation_parameters["roomInviteUser"]="roomId= "
+    operation_parameters["roomJoin"]="roomId= "
+    operation_parameters["roomJoinByAlias"]="roomIdOrAlias= "
+    operation_parameters["roomKickUser"]="roomId= "
+    operation_parameters["roomLeave"]="roomId= "
+    operation_parameters["roomUnbanUser"]="roomId= "
+    operation_parameters["createFilter"]="userId= "
+    operation_parameters["getAllRoomStates"]="roomId= "
+    operation_parameters["getEvent"]="eventId= "
+    operation_parameters["getEventWithContext"]="roomId= eventId= limit= "
+    operation_parameters["getFilter"]="userId= filterId= "
+    operation_parameters["getRoomMembers"]="roomId= "
+    operation_parameters["getRoomState"]="roomId= eventType= "
+    operation_parameters["getRoomStateWithKey"]="roomId= eventType= stateKey= "
+    operation_parameters["initialSync"]="limit= archived= "
+    operation_parameters["listEvents"]="roomId= from= to= dir= limit= filter= "
+    operation_parameters["listenForEvents"]="from= timeout= room_id= "
+    operation_parameters["roomInitialSync"]="roomId= "
+    operation_parameters["sendEvent"]="roomId= eventType= txnId= "
+    operation_parameters["sendReceipt"]="roomId= receiptType= eventId= "
+    operation_parameters["setRoomState"]="roomId= eventType= "
+    operation_parameters["setRoomStateWithKey"]="roomId= eventType= stateKey= "
+    operation_parameters["setTypingState"]="userId= roomId= "
+    operation_parameters["stripEvent"]="roomId= eventId= txnId= "
+    operation_parameters["sync"]="filter= since= full_state= set_presence= timeout= "
+    operation_parameters["search"]="next_batch= "
+    operation_parameters["sendToDevice"]="eventType= txnId= "
+    operation_parameters["versions"]=""
+    operation_parameters["whoIs"]="userId= "
+    operation_parameters["login"]=""
+    operation_parameters["logout"]=""
+    operation_parameters["addCredentials"]=""
+    operation_parameters["addUserTag"]="userId= roomId= tag= "
+    operation_parameters["changePassword"]=""
+    operation_parameters["deactivateAccount"]=""
+    operation_parameters["deleteUserTag"]="userId= roomId= tag= "
+    operation_parameters["getAvatar"]="userId= "
+    operation_parameters["getDisplayName"]="userId= "
+    operation_parameters["getUserIdentifiers"]=""
+    operation_parameters["getUserProfile"]="userId= "
+    operation_parameters["getUserTags"]="userId= roomId= "
+    operation_parameters["registerAccount"]="kind= "
+    operation_parameters["requestEmailValidation"]=""
+    operation_parameters["requestEmailValidationAfterAdd"]=""
+    operation_parameters["requestPasswordReset"]=""
+    operation_parameters["setAccountData"]="userId= type= "
+    operation_parameters["setAccountDataForRoom"]="userId= roomId= type= "
+    operation_parameters["setAvatar"]="userId= "
+    operation_parameters["setDisplayName"]="userId= "
+    operation_parameters["getTurnCredentials"]=""
+
+    # An associative array of possible values for enum parameters
+    declare -A operation_parameters_enum_values
+    operation_parameters_enum_values["deletePushRule::kind"]=""
+    operation_parameters_enum_values["deletePushRule::kind"]=""
+    operation_parameters_enum_values["deletePushRule::kind"]=""
+    operation_parameters_enum_values["getPushRule::kind"]=""
+    operation_parameters_enum_values["getPushRule::kind"]=""
+    operation_parameters_enum_values["getPushRule::kind"]=""
+    operation_parameters_enum_values["getPushRuleActions::kind"]=""
+    operation_parameters_enum_values["getPushRuleActions::kind"]=""
+    operation_parameters_enum_values["getPushRuleActions::kind"]=""
+    operation_parameters_enum_values["isPushRuleEnabled::kind"]=""
+    operation_parameters_enum_values["isPushRuleEnabled::kind"]=""
+    operation_parameters_enum_values["isPushRuleEnabled::kind"]=""
+    operation_parameters_enum_values["modifyPushRule::kind"]=""
+    operation_parameters_enum_values["modifyPushRule::kind"]=""
+    operation_parameters_enum_values["modifyPushRule::kind"]=""
+    operation_parameters_enum_values["modifyPushRule::kind"]=""
+    operation_parameters_enum_values["modifyPushRule::kind"]=""
+    operation_parameters_enum_values["modifyPushRule::kind"]=""
+    operation_parameters_enum_values["setPushRuleActions::kind"]=""
+    operation_parameters_enum_values["setPushRuleActions::kind"]=""
+    operation_parameters_enum_values["setPushRuleActions::kind"]=""
+    operation_parameters_enum_values["setPushRuleActions::kind"]=""
+    operation_parameters_enum_values["setPushRuleStatus::kind"]=""
+    operation_parameters_enum_values["setPushRuleStatus::kind"]=""
+    operation_parameters_enum_values["setPushRuleStatus::kind"]=""
+    operation_parameters_enum_values["setPushRuleStatus::kind"]=""
+    operation_parameters_enum_values["initialSync::archived"]="true false"
+    operation_parameters_enum_values["initialSync::archived"]="true false"
+    operation_parameters_enum_values["sendReceipt::receiptType"]=""
+    operation_parameters_enum_values["sendReceipt::receiptType"]=""
+    operation_parameters_enum_values["sendReceipt::receiptType"]=""
+    operation_parameters_enum_values["sendReceipt::receiptType"]=""
+    operation_parameters_enum_values["sync::full_state"]="true false"
+    operation_parameters_enum_values["sync::full_state"]="true false"
+    operation_parameters_enum_values["sync::full_state"]="true false"
+    operation_parameters_enum_values["sync::full_state"]="true false"
+    operation_parameters_enum_values["sync::full_state"]="true false"
+
+    #
+    # Check if this is OSX and use special __osx_init_completion function
+    #
+    if [[ `uname` =~ "Darwin" ]]; then
+        __osx_init_completion || return
+    else
+        _init_completion -s || return
+    fi
+
+
+    # Check if operation is already in the command line provided
+    for word in "${words[@]}"; do
+        if [[ -n $word && ${operations[$word]} ]]; then
+            operation="${word}"
+        fi
+    done
+
+    if [[ -z $operation ]]; then
+        case $prev in
+            --ciphers|--connect-timeout|-C|--continue-at|-F|--form|--form-string|\
+            --ftp-account|--ftp-alternative-to-user|-P|--ftp-port|-H|--header|-h|\
+            --help|--hostpubmd5|--keepalive-time|--krb|--limit-rate|--local-port|\
+            --mail-from|--mail-rcpt|--max-filesize|--max-redirs|-m|--max-time|\
+            --pass|--proto|--proto-redir|--proxy-user|--proxy1.0|-Q|--quote|-r|\
+            --range|-X|--request|--retry|--retry-delay|--retry-max-time|\
+            --socks5-gssapi-service|-t|--telnet-option|--tftp-blksize|-z|\
+            --time-cond|--url|-u|--user|-A|--user-agent|-V|--version|-w|\
+            --write-out|--resolve|--tlsuser|--tlspassword|--about)
+                return
+                ;;
+            -K|--config|-b|--cookie|-c|--cookie-jar|-D|--dump-header|--egd-file|\
+            --key|--libcurl|-o|--output|--random-file|-T|--upload-file|--trace|\
+            --trace-ascii|--netrc-file)
+                _filedir
+                return
+                ;;
+            --cacert|-E|--cert)
+                _filedir '@(c?(e)rt|cer|pem|der)'
+                return
+                ;;
+            --capath)
+                _filedir -d
+                return
+                ;;
+            --cert-type|--key-type)
+                COMPREPLY=( $( compgen -W 'DER PEM ENG' -- "$cur" ) )
+                return
+                ;;
+            --crlfile)
+                _filedir crl
+                return
+                ;;
+            -d|--data|--data-ascii|--data-binary|--data-urlencode)
+                if [[ $cur == \@* ]]; then
+                    cur=${cur:1}
+                    _filedir
+                    COMPREPLY=( "${COMPREPLY[@]/#/@}" )
+                fi
+                return
+                ;;
+            --delegation)
+                COMPREPLY=( $( compgen -W 'none policy always' -- "$cur" ) )
+                return
+                ;;
+            --engine)
+                COMPREPLY=( $( compgen -W 'list' -- "$cur" ) )
+                return
+                ;;
+            --ftp-method)
+                COMPREPLY=( $( compgen -W 'multicwd nocwd singlecwd' -- "$cur" ) )
+                return
+                ;;
+            --ftp-ssl-ccc-mode)
+                COMPREPLY=( $( compgen -W 'active passive' -- "$cur" ) )
+                return
+                ;;
+            --interface)
+                _available_interfaces -a
+                return
+                ;;
+            -x|--proxy|--socks4|--socks4a|--socks5|--socks5-hostname)
+                _known_hosts_real
+                return
+                ;;
+            --pubkey)
+                _filedir pub
+                return
+                ;;
+            --stderr)
+                COMPREPLY=( $( compgen -W '-' -- "$cur" ) )
+                _filedir
+                return
+                ;;
+            --tlsauthtype)
+                COMPREPLY=( $( compgen -W 'SRP' -- "$cur" ) )
+                return
+                ;;
+            --host)
+                COMPREPLY=( $( compgen -W 'http:// https://' -- "$cur" ) )
+                return
+                ;;
+            -ct|--content-type|-ac|--accept)
+                COMPREPLY=( $( compgen -W '${!mime_type_abbreviations[*]}' -- "$cur" ) )
+                return
+                ;;
+        esac
+    fi
+
+    #
+    # Complete the server address based on ~/.ssh/known_hosts
+    # and ~/.ssh/config
+    #
+    local prefix=${COMP_WORDS[COMP_CWORD-2]}
+    local colon=${COMP_WORDS[COMP_CWORD-1]}
+    if [[ "$colon" == ":" && ( $prefix == "https" || $prefix == "http" ) ]]; then
+        COMPREPLY=()
+        local comp_ssh_hosts=`[[ -f ~/.ssh/known_hosts ]] && \
+                              ( cat ~/.ssh/known_hosts | \
+                              grep '^[a-zA-Z0-9]' | \
+                              cut -f 1 -d ' ' | \
+                              sed -e s/,.*//g | \
+                              grep -v ^# | \
+                              uniq | \
+                              grep -v "\[" ) ;
+                              [[ -f ~/.ssh/config ]] && \
+                              ( cat ~/.ssh/config | \
+                              grep "^Host " | \
+                              awk '{print $2}' )`
+        COMPREPLY=( $( compgen -P '//' -W '${comp_ssh_hosts}' -- "${cur:2}") )
+        return
+    fi
+
+    #
+    # Complete the matrix-cli and cURL's arguments
+    #
+    if [[ $cur == -* ]]; then
+        COMPREPLY=( $( compgen -W '$(_parse_help curl) $(_parse_help $1)' -- "$cur" ) )
+        return
+    fi
+
+    #
+    # If the argument starts with a letter this could be either an operation
+    # or an operation parameter
+    # When $cur is empty, suggest the list of operations by default
+    #
+    if [[ $cur =~ ^[A-Za-z_0-9]* ]]; then
+        # If operation has not been yet selected, suggest the list of operations
+        # otherwise suggest arguments of this operation as declared in the
+        # Swagger specification
+        if [[ -z $operation ]]; then
+            COMPREPLY=( $(compgen -W '${!operations[*]}' -- ${cur}) )
+        else
+            COMPREPLY=( $(compgen -W '${operation_parameters[$operation]}' -- ${cur}) )
+            compopt -o nospace
+        fi
+        return
+    fi
+
+} &&
+complete -F _matrix-cli matrix-cli
+
+# ex: ts=4 sw=4 et filetype=sh
