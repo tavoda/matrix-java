@@ -26,6 +26,62 @@
 		</developer>
 	</developers>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>2.2.3</version>
+				<executions>
+					<execution>
+						<id>generate-java</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>src/main/resources/matrix-new-swagger.json</inputSpec>
+							<language>java</language>
+							<output>${project.basedir}</output>
+							<library>jersey2</library>
+							<!--
+							<verbose>true</verbose>
+							<configHelp>true</configHelp>
+							-->
+							<configOptions>
+								<modelPackage>org.matrix.client.model</modelPackage>
+								<invokerPackage>org.matrix.client</invokerPackage>
+								<apiPackage>org.matrix.client.api</apiPackage>
+								<sourceFolder>src/main/java</sourceFolder>
+								<dateLibrary>java8</dateLibrary>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-bash</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>src/main/resources/matrix-new-swagger.json</inputSpec>
+							<language>bash</language>
+							<output>${project.basedir}/src/main/bash</output>
+							<configOptions>
+								<processMarkdown>true</processMarkdown>
+								<curlOptions>-sS --tlsv1.2</curlOptions>
+								<scriptName>matrix-cli</scriptName>
+								<generateBashCompletion>true</generateBashCompletion>
+								<generateZshCompletion>false</generateZshCompletion>
+								<hostEnvironmentVariable>MATRIX_HOST</hostEnvironmentVariable>
+								<basicAuthEnvironmentVariable>MATRIX_BASIC_AUTH</basicAuthEnvironmentVariable>
+								<apiKeyAuthEnvironmentVariable>MATRIX_API_KEY</apiKeyAuthEnvironmentVariable>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -33,19 +89,19 @@
 			<version>${swagger-core-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>2.25.1</version>
-		</dependency>
-		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>${jackson-version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>2.25.1</version>
+			<version>${jersey-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>

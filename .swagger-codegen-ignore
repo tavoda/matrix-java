@@ -22,9 +22,13 @@
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
 
+gradle/**/*
 *gradle*
+**/*gradle*
 build.sbt
 git_push.sh
-src/main/AndroidManifest.xml
+**/AndroidManifest.xml
 .gitignore
 README.md
+.travis.yml
+.swagger-codegen/*

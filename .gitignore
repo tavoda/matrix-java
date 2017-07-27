@@ -1,17 +1,15 @@
 *.class
-*.swp
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # Package Files #
 *.jar
-!src/main/resources/swagger-codegen-cli.jar
 *.war
 *.ear
 
 # exclude jar for gradle wrapper
-#!gradle/wrapper/*.jar
+!gradle/wrapper/*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -21,13 +19,3 @@ hs_err_pid*
 target
 .gradle
 build
-gradle
-
-# IDEA files
-.idea
-*.iml
-
-# Generated files
-docs/
-src/main/java/
-src/test/java/org/matrix/client/api/
