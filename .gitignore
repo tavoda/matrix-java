@@ -31,3 +31,4 @@ gradle
 docs/
 src/main/java/
 src/test/java/org/matrix/client/api/
+**/.swagger-codegen/
